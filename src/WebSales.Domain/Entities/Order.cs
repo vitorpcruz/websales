@@ -1,6 +1,5 @@
 ﻿using WebSales.Domain.Exceptions;
 using WebSales.Domain.Notifications;
-using WebSales.Domain.ValueObjects;
 
 namespace WebSales.Domain.Entities
 {
@@ -8,7 +7,7 @@ namespace WebSales.Domain.Entities
     {
         public string OrderNumber { get; private set; }
         public Customer Customer { get; private set; }
-        public IEnumerable<ProductForSale> Products { get; private set; } 
+        public IEnumerable<Product> Products { get; private set; } 
         public double Total { get; private set; }
 
         public Order(Customer customer)
@@ -25,7 +24,6 @@ namespace WebSales.Domain.Entities
         public void UpdateOrder(Customer? customer)
         {
             ValidateCustomer(customer);
-            UpdateEntity();
         }
 
         public void ValidateCustomer(Customer? customer)
@@ -46,7 +44,7 @@ namespace WebSales.Domain.Entities
         public void CalculateTotal()
         {
             double sum = 0;
-            foreach (ProductForSale products in Products) sum += products.SubTotal;
+            foreach (Product product in Products) sum += product.Price;
             Total = sum;
         }
     }

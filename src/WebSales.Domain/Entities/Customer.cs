@@ -1,6 +1,6 @@
 ﻿using WebSales.Domain.Exceptions;
 using WebSales.Domain.Notifications;
-using WebSales.Domain.ValueObjects;
+using WebSales.Domain.Utils;
 
 namespace WebSales.Domain.Entities
 {
@@ -8,7 +8,7 @@ namespace WebSales.Domain.Entities
     {
         public string FullName { get; private set; }
         public bool IsLegalPerson { get; private set; }
-        public CustomerDocument Document { get; private set; }
+        public string Document { get; private set; }
         public IEnumerable<Product> ProductsPurchased { get; private set; }
 
         private Customer(string? fullName = null, string? documentNumber = null)
@@ -29,19 +29,28 @@ namespace WebSales.Domain.Entities
             FullName = fullName;
         }
         
-        public void ValidateLegalPerson() => IsLegalPerson = Document.DocumentNumber.Length == 14;
 
-        public void CustomerValidations(string? fullName = null, string? documentNumber = null)
+        public void CustomerValidations(string fullName, string documentNumber)
         {
             ValidateFullName(fullName);
-            Document = new(documentNumber);
-            ValidateLegalPerson();
+            ValidateDocument(documentNumber);
         }
 
-        public void UpdateCustomer(string? fullName = null, string? documentNumber = null)
+        private void ValidateDocument(string? documentNumber)
+        {
+            DomainException.When(string.IsNullOrWhiteSpace(documentNumber),
+                CustomerNotifications.DocumentNullOrWhiteSpaceNotificatation);
+
+            DomainException.When(DocumentValidations.IsCpf(documentNumber) || DocumentValidations.IsCnpj(documentNumber),
+                    CustomerNotifications.DocumentInvalidNotification);
+
+            IsLegalPerson = DocumentValidations.IsCnpj(documentNumber) ? true : false;
+            Document = documentNumber;
+        }
+
+        public void UpdateCustomer(string fullName, string documentNumber)
         {
             CustomerValidations(fullName, documentNumber);
-            UpdateEntity();
         }
 
         public Customer Factory(string? fullname, string? document) => new(fullname, document);

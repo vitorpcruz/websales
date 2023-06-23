@@ -67,7 +67,7 @@ namespace WebSales.Domain.Entities
             ValidateDescription(description);
             ValidatePrice(price);
             ValidateQuantity(quantity);
-            UpdateEntity();
+            //UpdateEntity();
         }
 
         public static Product Factory(string? name,
