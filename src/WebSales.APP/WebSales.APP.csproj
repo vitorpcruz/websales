@@ -14,4 +14,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\WebSales.Infra\WebSales.Infra.csproj" />
+  </ItemGroup>
+
 </Project>
