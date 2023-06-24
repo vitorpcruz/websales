@@ -10,13 +10,23 @@ namespace WebSales.Domain.Entities
         public string Document { get; private set; }
         public bool IsLegalPerson { get; private set; }
 
-        public IEnumerable<Order> RegisterOrders { get; private set; }
+        public IEnumerable<Order> RegisterOrders { get; set; }
 
         public Customer() { }
 
-        private Customer(string fullName, string documentNumber)
+        public Customer(string fullName, string document)
         {
-            CustomerValidations(fullName, documentNumber);
+            CustomerValidations(fullName, document);
+        }
+
+        public Customer(int id, string fullName, string document) : base(id)
+        {
+            CustomerValidations(fullName, document);
+        }
+
+        public Customer(int id, string fullName, string document, DateTime createdAt, DateTime modifiedAt) : base(id, createdAt, modifiedAt)
+        {
+            CustomerValidations(fullName, document);
         }
 
         public void ValidateFullName(string? fullName)
@@ -33,29 +43,32 @@ namespace WebSales.Domain.Entities
         }
         
 
-        public void CustomerValidations(string fullName, string documentNumber)
+        public void CustomerValidations(string fullName, string document)
         {
             ValidateFullName(fullName);
-            ValidateDocument(documentNumber);
+            ValidateDocument(document);
         }
 
-        private void ValidateDocument(string documentNumber)
+        private void ValidateDocument(string document)
         {
-            DomainException.When(string.IsNullOrWhiteSpace(documentNumber),
+            DomainException.When(string.IsNullOrWhiteSpace(document),
                 CustomerNotifications.DocumentNullOrWhiteSpaceNotificatation);
 
-            DomainException.When(DocumentValidations.IsCpf(documentNumber) || DocumentValidations.IsCnpj(documentNumber),
+            DomainException.When(DocumentValidations.IsCpf(document) || DocumentValidations.IsCnpj(document),
                     CustomerNotifications.DocumentInvalidNotification);
 
-            IsLegalPerson = DocumentValidations.IsCnpj(documentNumber) ? true : false;
-            Document = documentNumber;
+            IsLegalPerson = DocumentValidations.IsCnpj(document) ? true : false;
+            Document = document;
         }
 
-        public void UpdateCustomer(string fullName, string documentNumber)
+        public void UpdateCustomer(string fullName, string document)
         {
-            CustomerValidations(fullName, documentNumber);
+            CustomerValidations(fullName, document);
         }
 
-        public Customer Factory(string fullname, string document) => new(fullname, document);
+        public static Customer Factory(string fullname, string document) => new(fullname, document);
+        public static Customer Factory(int id, string fullname, string document, DateTime createdAt, DateTime modifiedAt) 
+            => new(id, fullname, document, createdAt, modifiedAt);
+
     }
 }
