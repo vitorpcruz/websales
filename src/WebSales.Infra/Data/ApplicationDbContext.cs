@@ -18,7 +18,7 @@ namespace WebSales.Infra.Data
             builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
 
             foreach (var relationship in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys())) 
-                relationship.DeleteBehavior = DeleteBehavior.SetNull;
+                relationship.DeleteBehavior = DeleteBehavior.ClientSetNull;
 
             base.OnModelCreating(builder);
         }

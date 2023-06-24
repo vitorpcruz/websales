@@ -7,14 +7,12 @@ namespace WebSales.Domain.Entities
     public class Customer : Entity
     {
         public string FullName { get; private set; }
-        public bool IsLegalPerson { get; private set; }
         public string Document { get; private set; }
-        public IEnumerable<Product> ProductsPurchased { get; private set; }
+        public bool IsLegalPerson { get; private set; }
 
-        public Customer()
-        {
-            
-        }
+        public IEnumerable<Order> RegisterOrders { get; private set; }
+
+        public Customer() { }
 
         private Customer(string fullName, string documentNumber)
         {

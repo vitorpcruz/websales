@@ -11,6 +11,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebSales.APP", "src\WebSale
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebSales.Application", "src\WebSales.Application\WebSales.Application.csproj", "{DBB40A3C-695C-4BAF-97BE-758B1D61B961}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{FBA118A2-551C-4574-A0E2-5C74BC39571D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{42DE7034-C51D-418F-BFCD-B99A61DE7826}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{D07CA107-0C2F-4728-BED5-E00953DB23FB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{D5B6CF2E-B4B2-43CB-9E7A-DD38E0C8E7A2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,6 +44,12 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{767BBBB0-06FA-4BD1-91A2-E369E20EC09C} = {D07CA107-0C2F-4728-BED5-E00953DB23FB}
+		{B40D00A7-5762-474A-A01B-AC6DEF5DFCFE} = {D5B6CF2E-B4B2-43CB-9E7A-DD38E0C8E7A2}
+		{44573CB4-CF5C-4FB0-A00B-7EA339AD259B} = {FBA118A2-551C-4574-A0E2-5C74BC39571D}
+		{DBB40A3C-695C-4BAF-97BE-758B1D61B961} = {42DE7034-C51D-418F-BFCD-B99A61DE7826}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FC944A06-1380-43A3-A6AC-CF340E0F4E81}

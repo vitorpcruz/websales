@@ -10,10 +10,9 @@ namespace WebSales.Domain.Entities
         public double Price { get; private set; }
         public int Quantity { get; private set; }
 
-        public Product()
-        {
-            
-        }
+        public IEnumerable<Order> Orders { get; private set; }
+
+        public Product() { }
 
         private Product(string name,
                         string? description,

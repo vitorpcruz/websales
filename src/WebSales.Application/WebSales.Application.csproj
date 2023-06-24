@@ -15,4 +15,8 @@
     <ProjectReference Include="..\WebSales.Infra\WebSales.Infra.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="NewFolder\" />
+  </ItemGroup>
+
 </Project>

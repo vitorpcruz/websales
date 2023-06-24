@@ -1,8 +1,9 @@
+using Microsoft.Extensions.Configuration;
 using WebSales.Infra.DependecyInjections;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var connectionString = builder.Configuration.GetConnectionString("WebSalesDb");
+string connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddDatabaseContextInjection(connectionString);

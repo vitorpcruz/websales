@@ -1,7 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System.Data;
+﻿using Microsoft.EntityFrameworkCore;
 using WebSales.Domain.Entities;
 using WebSales.Infra.Interfaces;
 using WebSales.Infra.Data;
@@ -50,18 +47,19 @@ namespace WebSales.Infra.Repositories
 
     public class CustomerRepository : ICustomerRepository
     {
-        private readonly string _connectionString;
+        //private readonly string _connectionString;
 
-        public CustomerRepository(IConfiguration configuration)
-        {
-            _connectionString = configuration.GetConnectionString("WebSalesDb");
-        }
+        // public CustomerRepository(IConfiguration configuration)
+        // {
+        //     _connectionString = configuration.GetConnectionString("WebSalesDb");
+        // }
 
         public async Task<Customer> AddAsync(Customer entity)
         {
+            /*
             string query = "INSERT INTO customers (full_name, document, is_legal_person) VALUES (@full_name, @document, @is_legal_person)";
 
-            using (SqlConnection connection = new(_connectionString))
+            using (SqlConnection connection = new("con"))
             {
                 try
                 {
@@ -81,7 +79,7 @@ namespace WebSales.Infra.Repositories
                 }
                 finally
                 {
-                    if(connection?.State == ConnectionState.Open)
+                    if (connection?.State == ConnectionState.Open)
                     {
                         await connection.CloseAsync();
                     }
@@ -89,6 +87,8 @@ namespace WebSales.Infra.Repositories
             }
 
             return entity;
+            */
+            throw new NotImplementedException();
         }
 
         public Task<Customer> FindByIdAsync(int id)

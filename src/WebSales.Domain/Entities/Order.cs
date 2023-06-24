@@ -1,5 +1,4 @@
-﻿using System.Drawing;
-using WebSales.Domain.Exceptions;
+﻿using WebSales.Domain.Exceptions;
 using WebSales.Domain.Notifications;
 
 namespace WebSales.Domain.Entities
@@ -7,15 +6,15 @@ namespace WebSales.Domain.Entities
     public class Order : Entity
     {
         public string OrderNumber { get; private set; }
-        public IEnumerable<Product> Products { get; private set; } 
-        public double Total { get; private set; }
-        public Customer Customer { get; private set; }
         public int CustomerId { get; private set; }
+        public int ProductId { get; private set; }
+        public int Quantity { get; private set; }
+        public double Total { get; private set; }
 
-        public Order()
-        {
-            
-        }
+        public Customer Customer { get; private set; }
+        public Product Product { get; private set; }
+
+        public Order() { }
 
         public Order(Customer customer)
         {
@@ -46,13 +45,6 @@ namespace WebSales.Domain.Entities
                 .Replace("T", "")
                 .Replace(":", "")
                 .Split('.')[0];
-        }
-
-        public void CalculateTotal()
-        {
-            double sum = 0;
-            foreach (Product product in Products) sum += product.Price;
-            Total = sum;
         }
     }
 }
