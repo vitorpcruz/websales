@@ -5,7 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("WebSalesDb");
 
 builder.Services.AddControllersWithViews();
-builder.Services.AddDatabaseInjection(connectionString);
+builder.Services.AddDatabaseContextInjection(connectionString);
 
 var app = builder.Build();
 

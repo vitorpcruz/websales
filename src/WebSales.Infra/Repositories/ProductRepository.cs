@@ -4,15 +4,15 @@ using Microsoft.Extensions.Configuration;
 using System.Data;
 using WebSales.Domain.Entities;
 using WebSales.Infra.Interfaces;
-using WebSales.Infra.Contexts;
+using WebSales.Infra.Data;
 
 namespace WebSales.Infra.Repositories
 {
     public class ProductRepository : IProductRepository
     {
-        private readonly Context _context;
+        private readonly ApplicationDbContext _context;
 
-        public ProductRepository(Context context) => _context = context;
+        public ProductRepository(ApplicationDbContext context) => _context = context;
 
         public async Task<Product> AddAsync(Product entity)
         {

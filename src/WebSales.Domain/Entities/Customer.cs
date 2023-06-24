@@ -11,7 +11,12 @@ namespace WebSales.Domain.Entities
         public string Document { get; private set; }
         public IEnumerable<Product> ProductsPurchased { get; private set; }
 
-        private Customer(string? fullName = null, string? documentNumber = null)
+        public Customer()
+        {
+            
+        }
+
+        private Customer(string fullName, string documentNumber)
         {
             CustomerValidations(fullName, documentNumber);
         }
@@ -36,7 +41,7 @@ namespace WebSales.Domain.Entities
             ValidateDocument(documentNumber);
         }
 
-        private void ValidateDocument(string? documentNumber)
+        private void ValidateDocument(string documentNumber)
         {
             DomainException.When(string.IsNullOrWhiteSpace(documentNumber),
                 CustomerNotifications.DocumentNullOrWhiteSpaceNotificatation);
@@ -53,6 +58,6 @@ namespace WebSales.Domain.Entities
             CustomerValidations(fullName, documentNumber);
         }
 
-        public Customer Factory(string? fullname, string? document) => new(fullname, document);
+        public Customer Factory(string fullname, string document) => new(fullname, document);
     }
 }

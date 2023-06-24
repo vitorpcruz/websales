@@ -1,4 +1,5 @@
-﻿using WebSales.Domain.Exceptions;
+﻿using System.Drawing;
+using WebSales.Domain.Exceptions;
 using WebSales.Domain.Notifications;
 
 namespace WebSales.Domain.Entities
@@ -6,9 +7,15 @@ namespace WebSales.Domain.Entities
     public class Order : Entity
     {
         public string OrderNumber { get; private set; }
-        public Customer Customer { get; private set; }
         public IEnumerable<Product> Products { get; private set; } 
         public double Total { get; private set; }
+        public Customer Customer { get; private set; }
+        public int CustomerId { get; private set; }
+
+        public Order()
+        {
+            
+        }
 
         public Order(Customer customer)
         {

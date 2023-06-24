@@ -10,8 +10,13 @@ namespace WebSales.Domain.Entities
         public double Price { get; private set; }
         public int Quantity { get; private set; }
 
-        private Product(string? name,
-                        string? description = null,
+        public Product()
+        {
+            
+        }
+
+        private Product(string name,
+                        string? description,
                         double price = ProductNotifications.PriceMinValue,
                         int quantity = ProductNotifications.QuantityMinValue)
         {
@@ -21,7 +26,7 @@ namespace WebSales.Domain.Entities
             ValidateQuantity(quantity);
         }
 
-        private void ValidateName(string? name)
+        private void ValidateName(string name)
         {
             DomainException.When(string.IsNullOrWhiteSpace(name), 
                 ProductNotifications.NameNullOrEmptyNotification);
@@ -33,7 +38,7 @@ namespace WebSales.Domain.Entities
             Name = name;
         }
 
-        private void ValidateDescription(string? description)
+        private void ValidateDescription(string description)
         {
             DomainException.When(description.Length > ProductNotifications.DescriptionMaxLen, 
                 ProductNotifications.DescriptionMaxLenNotification);
@@ -58,7 +63,7 @@ namespace WebSales.Domain.Entities
         }
 
         private void UpdateProduct(string? name,
-                                    string? description = null,
+                                    string? description,
                                     double price = ProductNotifications.PriceMinValue,
                                     int quantity = ProductNotifications.QuantityMinValue
             )
