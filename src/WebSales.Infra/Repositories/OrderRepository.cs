@@ -3,29 +3,29 @@ using WebSales.Infra.Interfaces;
 
 namespace WebSales.Infra.Repositories
 {
-    public class OrderRepository : IOrderRepository
+    public class SaleRepository : ISaleRepository
     {
-        public Task AddAsync(Order entity)
+        public Task AddAsync(Sale entity)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Order> FindByIdAsync(int id)
+        public Task<Sale> FindByIdAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Order> GetOrderByOrderNumberAsync(string? orderNumber)
+        public Task<double> GetProfitabilityByDateAsync(DateTime date)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Order>> GetOrdersByDateAsync(DateTime date)
+        public Task<IEnumerable<Sale>> GetSaleByDateAsync(DateTime date)
         {
             throw new NotImplementedException();
         }
 
-        public Task<double> GetTotalSaledForDay(DateTime date)
+        public Task<Sale> GetSalesBySaleNumberAsync(string orderNumber)
         {
             throw new NotImplementedException();
         }
@@ -35,7 +35,7 @@ namespace WebSales.Infra.Repositories
             throw new NotImplementedException();
         }
 
-        public Task UpdateAsync(Order entity)
+        public Task UpdateAsync(Sale entity)
         {
             throw new NotImplementedException();
         }

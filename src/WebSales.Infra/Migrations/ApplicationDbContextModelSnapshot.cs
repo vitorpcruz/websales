@@ -59,7 +59,41 @@ namespace WebSales.Infra.Migrations
                     b.ToTable("Customers");
                 });
 
-            modelBuilder.Entity("WebSales.Domain.Entities.Order", b =>
+            modelBuilder.Entity("WebSales.Domain.Entities.Product", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(1000)
+                        .HasColumnType("varchar(1000)");
+
+                    b.Property<DateTime?>("ModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("varchar(1000)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("WebSales.Domain.Entities.Sale", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -96,52 +130,18 @@ namespace WebSales.Infra.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Sales");
                 });
 
-            modelBuilder.Entity("WebSales.Domain.Entities.Product", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(1000)
-                        .HasColumnType("varchar(1000)");
-
-                    b.Property<DateTime?>("ModifiedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("varchar(1000)");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(10,2)");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Products");
-                });
-
-            modelBuilder.Entity("WebSales.Domain.Entities.Order", b =>
+            modelBuilder.Entity("WebSales.Domain.Entities.Sale", b =>
                 {
                     b.HasOne("WebSales.Domain.Entities.Customer", "Customer")
-                        .WithMany("RegisterOrders")
+                        .WithMany("CustomerSales")
                         .HasForeignKey("CustomerId")
                         .IsRequired();
 
                     b.HasOne("WebSales.Domain.Entities.Product", "Product")
-                        .WithMany("Orders")
+                        .WithMany("ProductsSold")
                         .HasForeignKey("ProductId")
                         .IsRequired();
 
@@ -152,12 +152,12 @@ namespace WebSales.Infra.Migrations
 
             modelBuilder.Entity("WebSales.Domain.Entities.Customer", b =>
                 {
-                    b.Navigation("RegisterOrders");
+                    b.Navigation("CustomerSales");
                 });
 
             modelBuilder.Entity("WebSales.Domain.Entities.Product", b =>
                 {
-                    b.Navigation("Orders");
+                    b.Navigation("ProductsSold");
                 });
 #pragma warning restore 612, 618
         }

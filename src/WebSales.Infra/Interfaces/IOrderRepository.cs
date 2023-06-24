@@ -2,10 +2,10 @@
 
 namespace WebSales.Infra.Interfaces
 {
-    public interface IOrderRepository : IRepository<Order>
+    public interface ISaleRepository : IRepository<Sale>
     {
-        Task<Order> GetOrderByOrderNumberAsync(string? orderNumber);
-        Task<IEnumerable<Order>> GetOrdersByDateAsync(DateTime date);
-        Task<double> GetTotalSaledForDay(DateTime date);
+        Task<Sale> GetSalesBySaleNumberAsync(string orderNumber);
+        Task<IEnumerable<Sale>> GetSaleByDateAsync(DateTime date);
+        Task<double> GetProfitabilityByDateAsync(DateTime date);
     }
 }

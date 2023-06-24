@@ -4,9 +4,9 @@ using WebSales.Domain.Entities;
 
 namespace WebSales.Infra.Mappings
 {
-    public class OrderMapping : IEntityTypeConfiguration<Order>
+    public class SaleMapping : IEntityTypeConfiguration<Sale>
     {
-        public void Configure(EntityTypeBuilder<Order> builder)
+        public void Configure(EntityTypeBuilder<Sale> builder)
         {
             builder.HasKey(x => x.Id);
 
@@ -26,10 +26,10 @@ namespace WebSales.Infra.Mappings
 
             builder.Property(x => x.ModifiedAt);
 
-            builder.HasOne(x => x.Customer).WithMany(y => y.RegisterOrders).HasForeignKey(x => x.CustomerId);
+            builder.HasOne(x => x.Customer).WithMany(y => y.CustomerSales).HasForeignKey(x => x.CustomerId);
 
             builder.HasOne(x => x.Product)
-                .WithMany(y => y.Orders)
+                .WithMany(y => y.ProductsSold)
                 .HasForeignKey(x => x.ProductId);
         }
     }

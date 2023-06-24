@@ -3,7 +3,7 @@ using WebSales.Domain.Notifications;
 
 namespace WebSales.Domain.Entities
 {
-    public class Order : Entity
+    public class Sale : Entity
     {
         public string OrderNumber { get; private set; }
         public int CustomerId { get; private set; }
@@ -14,20 +14,20 @@ namespace WebSales.Domain.Entities
         public Customer Customer { get; private set; }
         public Product Product { get; private set; }
 
-        public Order() { }
+        public Sale() { }
 
-        public Order(Customer customer)
+        public Sale(Customer customer)
         {
-            OrderValidations(customer);
+            SaleValidations(customer);
         }
 
-        public void OrderValidations(Customer? customer)
+        public void SaleValidations(Customer? customer)
         {
-            GenerateOrderNumber();
+            GenerateSaleNumber();
             ValidateCustomer(customer);
         }
 
-        public void UpdateOrder(Customer? customer)
+        public void UpdateSale(Customer? customer)
         {
             ValidateCustomer(customer);
         }
@@ -38,7 +38,7 @@ namespace WebSales.Domain.Entities
             Customer = customer;
         }
 
-        public void GenerateOrderNumber()
+        public void GenerateSaleNumber()
         {
             OrderNumber = DateTime.Now.ToString("o")
                 .Replace("-", "")

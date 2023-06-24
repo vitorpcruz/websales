@@ -10,7 +10,7 @@ namespace WebSales.Domain.Entities
         public string Document { get; private set; }
         public bool IsLegalPerson { get; private set; }
 
-        public IEnumerable<Order> RegisterOrders { get; set; }
+        public IEnumerable<Sale> CustomerSales { get; set; }
 
         public Customer() { }
 

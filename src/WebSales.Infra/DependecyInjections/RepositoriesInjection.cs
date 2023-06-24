@@ -10,7 +10,7 @@ namespace WebSales.Infra.DependecyInjections
         {
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<ICustomerRepository, CustomerRepository>();
-            services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<ISaleRepository, SaleRepository>();
             return services;
         }
     }
