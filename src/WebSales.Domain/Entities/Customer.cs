@@ -54,10 +54,14 @@ namespace WebSales.Domain.Entities
             DomainException.When(string.IsNullOrWhiteSpace(document),
                 CustomerNotifications.DocumentNullOrWhiteSpaceNotificatation);
 
-            DomainException.When(DocumentValidations.IsCpf(document) || DocumentValidations.IsCnpj(document),
+            DomainException.When(DocumentValidations.IsCpf(document) && DocumentValidations.IsCnpj(document),
                     CustomerNotifications.DocumentInvalidNotification);
 
-            IsLegalPerson = DocumentValidations.IsCnpj(document) ? true : false;
+            //if (DocumentValidations.IsCpf(document)) Document = document;
+            //else if (DocumentValidations.IsCnpj(document)) Document = document;
+            //else 
+
+            IsLegalPerson = DocumentValidations.IsCnpj(document);
             Document = document;
         }
 
@@ -67,8 +71,8 @@ namespace WebSales.Domain.Entities
         }
 
         public static Customer Factory(string fullname, string document) => new(fullname, document);
-        public static Customer Factory(int id, string fullname, string document, DateTime createdAt, DateTime modifiedAt) 
-            => new(id, fullname, document, createdAt, modifiedAt);
+        public static Customer Factory(int? id, string? fullname, string? document, DateTime? createdAt, DateTime? modifiedAt)
+            => new(id.Value, fullname, document, createdAt.Value, modifiedAt.Value);
 
     }
 }

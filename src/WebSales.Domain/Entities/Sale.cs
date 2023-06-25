@@ -14,7 +14,7 @@
         public Sale() { }
 
         public Sale(int id,
-                    string orderNumber,
+                    string saleNumber,
                     int customerId,
                     int productId,
                     int quantity,
@@ -23,7 +23,7 @@
                     DateTime modifiedAt) : base(id, createdAt, modifiedAt)
         {
             //Validate
-            SaleNumber = orderNumber;
+            SaleNumber = saleNumber;
             ProductId = productId;
             CustomerId = customerId;
             Quantity = quantity;
@@ -32,7 +32,7 @@
 
         public void SaleValidations(Customer? customer)
         {
-            GenerateSaleNumber();
+            SaleNumber = GenerateSaleNumber();
             //ValidateCustomer(customer);
         }
 
@@ -47,9 +47,9 @@
         //    Customer = customer;
         //}
 
-        public void GenerateSaleNumber()
+        public string GenerateSaleNumber()
         {
-            SaleNumber = DateTime.Now.ToString("o")
+            return DateTime.Now.ToString("o")
                 .Replace("-", "")
                 .Replace("T", "")
                 .Replace(":", "")

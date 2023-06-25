@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WebSales.Domain.Entities;
+using WebSales.Infra.Mocks;
 
 namespace WebSales.Infra.Mappings
 {
@@ -33,6 +34,8 @@ namespace WebSales.Infra.Mappings
                 .IsRequired();
 
             builder.Property(x => x.ModifiedAt);
+
+            builder.HasData(ProductMock.GenerateProductMock());
         }
     }
 }

@@ -9,7 +9,7 @@ namespace WebSales.Infra.Repositories
     {
         public async Task<Customer> FindByIdAsync(int id)
         {
-            string query = "SELECT Customers.Id, Customers.FullName, Customers.Document, Customers.CreatedAt, Customers.Modified FROM Customers WHERE Customers.Id = @Id";
+            string query = "SELECT Customers.Id, Customers.FullName, Customers.Document, Customers.CreatedAt, Customers.ModifiedAt FROM Customers WHERE Customers.Id = @Id";
 
             using SqlConnection connection = new(ConnectionString);
 
@@ -25,11 +25,22 @@ namespace WebSales.Infra.Repositories
                 {
                     if (await reader.ReadAsync())
                     {
-                        customer = Customer.Factory((int)reader["Id"],
-                            (string)reader["FullName"],
-                            (string)reader["Document"],
-                            (DateTime)reader["CreateAt"],
-                            (DateTime)reader["ModifiedAt"]);
+                        //customer = Customer.Factory(
+                        //    (int)reader["Id"],
+                        //    (string)reader["FullName"],
+                        //    (string)reader["Document"],
+                        //    (DateTime) reader["CreatedAt"],
+                        //    (DateTime) reader["ModifiedAt"]
+                        //);
+
+                        int tempId = (int)reader["Id"];
+                        string tempFullName = (string)reader["FullName"];
+                        string tempDocument = (string)reader["Document"];
+                        DateTime tempCreatedAt = (DateTime)reader["CreatedAt"];
+                        DateTime? tempModifiedAt = DBNull.Value.Equals(reader["ModifiedAt"]) ? null : (DateTime)reader["ModifiedAt"];
+
+                        customer = new(tempId, tempFullName, tempDocument, tempCreatedAt, tempModifiedAt.Value);
+
                     }
                 }
             }
@@ -44,11 +55,12 @@ namespace WebSales.Infra.Repositories
             return customer;
         }
 
-        public async Task AddAsync(Customer entity)
+        public async Task<int> AddAsync(Customer entity)
         {
-            string query = "INSERT INTO Customers (FullName, Document, IsLegalPerson, CreatedAt, ModifiedAt) VALUES (@FullName, @Document, @IsLegalPerson, @CreatedAt, @ModifiedAt)";
+            string query = "INSERT INTO Customers (FullName, Document, IsLegalPerson, CreatedAt) VALUES (@FullName, @Document, @IsLegalPerson, @CreatedAt)";
 
             using SqlConnection connection = new(ConnectionString);
+            int result;
             SqlCommand command = new(query, connection)
             {
                 CommandType = CommandType.Text
@@ -58,12 +70,11 @@ namespace WebSales.Infra.Repositories
             command.Parameters.AddWithValue("@Document", entity.Document);
             command.Parameters.AddWithValue("@IsLegalPerson", entity.IsLegalPerson);
             command.Parameters.AddWithValue("@CreatedAt", DateTime.Now);
-            command.Parameters.AddWithValue("@ModifiedAt", null);
 
             try
             {
                 await OpenConnection(connection);
-                await command.ExecuteNonQueryAsync();
+                result = await command.ExecuteNonQueryAsync();
             }
             catch (Exception)
             {
@@ -73,6 +84,7 @@ namespace WebSales.Infra.Repositories
             {
                 await CheckAndCloseConnection(connection);
             }
+            return result;
         }
 
         public async Task RemoveAsync(int id)

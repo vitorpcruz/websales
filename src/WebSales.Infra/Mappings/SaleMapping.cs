@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WebSales.Domain.Entities;
+using WebSales.Infra.Mocks;
 
 namespace WebSales.Infra.Mappings
 {
@@ -33,6 +34,8 @@ namespace WebSales.Infra.Mappings
             builder.HasOne(x => x.Product)
                 .WithMany(y => y.ProductsSold)
                 .HasForeignKey(x => x.ProductId);
+
+            builder.HasData(SaleMock.GenerateSaleMock());
         }
     }
 }

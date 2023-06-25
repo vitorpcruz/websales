@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WebSales.Domain.Entities;
+using WebSales.Infra.Mocks;
 
 namespace WebSales.Infra.Mappings
 {
@@ -18,8 +19,8 @@ namespace WebSales.Infra.Mappings
                 .IsRequired();
 
             builder.Property(x => x.Document)
-                .HasMaxLength(14)
-                .HasColumnType("char")
+                .HasMaxLength(18)
+                .HasColumnType("varchar")
                 .IsRequired();
 
             builder.Property(x => x.IsLegalPerson)
@@ -34,6 +35,8 @@ namespace WebSales.Infra.Mappings
 
             builder.HasIndex(x => x.Document)
                 .IsUnique();
+
+            builder.HasData(CustomerMock.GeneratePersonMock());
         }
     }
 }

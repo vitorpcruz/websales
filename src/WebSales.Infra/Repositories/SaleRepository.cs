@@ -81,10 +81,10 @@ namespace WebSales.Infra.Repositories
             return sale;
         }
 
-        public async Task AddAsync(Sale entity)
+        public async Task<int> AddAsync(Sale entity)
         {
             string query = "INSERT INTO Sales (SaleNumber, CustomerId, ProductId, Quantity, Total, CreatedAt, ModifiedAt) VALUES (@SaleNumber, @CustomerId, @ProductId, @Quantity, @Total, @CreatedAt, @ModifiedtAt)";
-            
+            int result;
             using SqlConnection connection = new(ConnectionString);
             using SqlCommand command = new(query, connection) { CommandType = CommandType.Text };
 
@@ -99,7 +99,7 @@ namespace WebSales.Infra.Repositories
             try
             {
                 await OpenConnection(connection);
-                await command.ExecuteNonQueryAsync();
+                result = await command.ExecuteNonQueryAsync();
             }
             catch(Exception)
             {
@@ -109,6 +109,7 @@ namespace WebSales.Infra.Repositories
             {
                 await CheckAndCloseConnection(connection);
             }
+            return result;
         }
 
         public async Task<IEnumerable<Sale>> GetSalesListByDateAsync(DateTime date)
