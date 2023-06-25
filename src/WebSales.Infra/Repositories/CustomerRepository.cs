@@ -12,10 +12,10 @@ namespace WebSales.Infra.Repositories
             string query = "SELECT Customers.Id, Customers.FullName, Customers.Document, Customers.CreatedAt, Customers.ModifiedAt FROM Customers WHERE Customers.Id = @Id";
 
             using SqlConnection connection = new(ConnectionString);
+            using SqlCommand command = new(query, connection);
 
-            SqlCommand command = new(query, connection);
             command.Parameters.AddWithValue("@Id", id);
-            Customer customer = null;
+            Customer? customer = null;
 
             try
             {
@@ -25,22 +25,13 @@ namespace WebSales.Infra.Repositories
                 {
                     if (await reader.ReadAsync())
                     {
-                        //customer = Customer.Factory(
-                        //    (int)reader["Id"],
-                        //    (string)reader["FullName"],
-                        //    (string)reader["Document"],
-                        //    (DateTime) reader["CreatedAt"],
-                        //    (DateTime) reader["ModifiedAt"]
-                        //);
-
-                        int tempId = (int)reader["Id"];
-                        string tempFullName = (string)reader["FullName"];
-                        string tempDocument = (string)reader["Document"];
-                        DateTime tempCreatedAt = (DateTime)reader["CreatedAt"];
-                        DateTime? tempModifiedAt = DBNull.Value.Equals(reader["ModifiedAt"]) ? null : (DateTime)reader["ModifiedAt"];
-
-                        customer = new(tempId, tempFullName, tempDocument, tempCreatedAt, tempModifiedAt.Value);
-
+                        customer = new(
+                            (int)reader["Id"],
+                            (string)reader["FullName"],
+                            (string)reader["Document"],
+                            (DateTime)reader["CreatedAt"],
+                            DBNull.Value.Equals(reader["ModifiedAt"]) ? null : (DateTime)reader["ModifiedAt"]
+                        );
                     }
                 }
             }
@@ -58,10 +49,10 @@ namespace WebSales.Infra.Repositories
         public async Task<int> AddAsync(Customer entity)
         {
             string query = "INSERT INTO Customers (FullName, Document, IsLegalPerson, CreatedAt) VALUES (@FullName, @Document, @IsLegalPerson, @CreatedAt)";
+            int result;
 
             using SqlConnection connection = new(ConnectionString);
-            int result;
-            SqlCommand command = new(query, connection)
+            using SqlCommand command = new(query, connection)
             {
                 CommandType = CommandType.Text
             };
@@ -92,7 +83,7 @@ namespace WebSales.Infra.Repositories
             string query = "DELETE FROM Customers WHERE Customers.Id = @Id";
 
             using SqlConnection connection = new(ConnectionString);
-            SqlCommand command = new(query, connection);
+            using SqlCommand command = new(query, connection);
             command.Parameters.AddWithValue("@Id", id);
 
             try
@@ -112,11 +103,12 @@ namespace WebSales.Infra.Repositories
 
         public async Task UpdateAsync(Customer entity)
         {
-            string query = "UPDATE Customer SET Customer.FullName=@FullName, Customer.Document=@Document, Customer.IsLegalPerson=@IsLegalPerson, Customer.ModifiedAt=@ModifiedAt WHERE Customer.Id = @Id";
+            string query = "UPDATE Customers SET Customers.FullName=@FullName, Customers.Document=@Document, Customers.IsLegalPerson=@IsLegalPerson, Customers.ModifiedAt=@ModifiedAt WHERE Customers.Id = @Id";
             
             using SqlConnection connection = new(ConnectionString);
             using SqlCommand command = new(query, connection);
 
+            command.Parameters.AddWithValue("@Id", entity.Id);
             command.Parameters.AddWithValue("@FullName", entity.FullName);
             command.Parameters.AddWithValue("@Document", entity.Document);
             command.Parameters.AddWithValue("@IsLegalPerson", entity.IsLegalPerson);
@@ -139,11 +131,11 @@ namespace WebSales.Infra.Repositories
 
         public async Task<bool> CheckIfDocumentExists(string document)
         {
-            string query = "SELECT Customers.Document FROM Customers WHERE Customers.Documnet=@Document";
+            string query = "SELECT Customers.Document FROM Customers WHERE Customers.Document=@Document";
             
             using SqlConnection connection = new(ConnectionString);
-            
-            SqlCommand command = new(query, connection);
+            using SqlCommand command = new(query, connection);
+           
             bool result;
 
             command.Parameters.AddWithValue("@Document", document);
@@ -165,6 +157,159 @@ namespace WebSales.Infra.Repositories
                 await CheckAndCloseConnection(connection);
             }
             return result;
+        }
+
+        public async Task<Customer> GetCustomerByDocumentAsync(string document)
+        {
+            string query = "SELECT Customers.Id, Customers.FullName, Customers.Document, Customers.IsLegalPerson, Customers.CreatedAt, Customers.ModifiedAt FROM Customers WHERE Customers.Document LIKE @Document";
+
+            Customer? customer = null;
+
+            using SqlConnection connection = new(ConnectionString);
+            using SqlCommand command = new(query, connection);
+
+            command.Parameters.AddWithValue("@Document", "%" + document + "%");
+            try
+            {
+                await OpenConnection(connection);
+                SqlDataReader reader = await command.ExecuteReaderAsync(CommandBehavior.CloseConnection);
+                if (reader.HasRows)
+                {
+                    if (await reader.ReadAsync())
+                    {
+                        customer = new(
+                            (int)reader["Id"],
+                            (string)reader["FullName"],
+                            (string)reader["Document"],
+                            (DateTime)reader["CreatedAt"],
+                            DBNull.Value.Equals(reader["ModifiedAt"]) ? null : (DateTime)reader["ModifiedAt"]
+                        );
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                await CheckAndCloseConnection(connection);
+            }
+            return customer;
+        }
+
+        public Task<Customer> GetCustomerByFullNameAsync(string fullName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<IEnumerable<Customer>> GetCustomersAsync()
+        {
+            string query = "SELECT * FROM Customers";
+
+            List<Customer> customers = new();
+
+            using SqlConnection connection = new(ConnectionString);
+            using SqlCommand command = new(query, connection);
+
+            try
+            {
+                await OpenConnection(connection);
+                SqlDataReader reader = await command.ExecuteReaderAsync(CommandBehavior.CloseConnection);
+                while(await reader.ReadAsync())
+                {
+                    customers.Add(new(
+                        (int)reader["Id"],
+                        (string)reader["FullName"],
+                        (string)reader["Document"],
+                        (DateTime)reader["CreatedAt"],
+                        DBNull.Value.Equals(reader["ModifiedAt"]) ? null : (DateTime)reader["ModifiedAt"]
+                    ));
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                await CheckAndCloseConnection(connection);
+            }
+            return customers;
+        }
+
+        public async Task<IEnumerable<Customer>> GetCustomersByFullNameAsync(string fullName)
+        {
+            string query = "SELECT * FROM Customers WHERE Customers.FullName LIKE @FullName";
+
+            List<Customer> customers = new();
+
+            using SqlConnection connection = new(ConnectionString);
+            using SqlCommand command = new(query, connection);
+
+            command.Parameters.AddWithValue("@FullName", "%"+ fullName + "%");
+
+            try
+            {
+                await OpenConnection(connection);
+                SqlDataReader reader = await command.ExecuteReaderAsync(CommandBehavior.CloseConnection);
+                while (await reader.ReadAsync())
+                {
+                    customers.Add(new(
+                        (int)reader["Id"],
+                        (string)reader["FullName"],
+                        (string)reader["Document"],
+                        (DateTime)reader["CreatedAt"],
+                        DBNull.Value.Equals(reader["ModifiedAt"]) ? null : (DateTime)reader["ModifiedAt"]
+                    ));
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                await CheckAndCloseConnection(connection);
+            }
+            return customers;
+        }
+
+        public async Task<IEnumerable<Customer>> GetCustomersByDocumentAsync(string document)
+        {
+            string query = "SELECT * FROM Customers WHERE Customers.Document LIKE @Document";
+
+            List<Customer> customers = new();
+
+            using SqlConnection connection = new(ConnectionString);
+            using SqlCommand command = new(query, connection);
+
+            command.Parameters.AddWithValue("@Document", "%" + document + "%");
+
+            try
+            {
+                await OpenConnection(connection);
+                SqlDataReader reader = await command.ExecuteReaderAsync(CommandBehavior.CloseConnection);
+                while (await reader.ReadAsync())
+                {
+                    customers.Add(new(
+                        (int)reader["Id"],
+                        (string)reader["FullName"],
+                        (string)reader["Document"],
+                        (DateTime)reader["CreatedAt"],
+                        DBNull.Value.Equals(reader["ModifiedAt"]) ? null : (DateTime)reader["ModifiedAt"]
+                    ));
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                await CheckAndCloseConnection(connection);
+            }
+            return customers;
         }
     }
 }

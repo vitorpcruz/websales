@@ -2,7 +2,7 @@
 {
     public abstract class Entity
     {
-        public int? Id { get; private set; }
+        public int Id { get; private set; }
         public DateTime CreatedAt { get; private set; }
         public DateTime? ModifiedAt { get; private set; }
 
@@ -19,7 +19,7 @@
             ModifiedAt = null;
         }
 
-        public Entity(int id, DateTime createdAt, DateTime modifiedAt)
+        public Entity(int id, DateTime createdAt, DateTime? modifiedAt)
         {
             Id = id;
             CreatedAt = createdAt;

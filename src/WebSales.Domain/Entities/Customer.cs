@@ -24,7 +24,7 @@ namespace WebSales.Domain.Entities
             CustomerValidations(fullName, document);
         }
 
-        public Customer(int id, string fullName, string document, DateTime createdAt, DateTime modifiedAt) : base(id, createdAt, modifiedAt)
+        public Customer(int id, string fullName, string document, DateTime createdAt, DateTime? modifiedAt) : base(id, createdAt, modifiedAt)
         {
             CustomerValidations(fullName, document);
         }
@@ -34,8 +34,7 @@ namespace WebSales.Domain.Entities
             DomainException.When(string.IsNullOrWhiteSpace(fullName),
                 CustomerNotifications.FullNameIsNullOrWhiteSpace);
 
-            DomainException.When(
-                fullName.Length < CustomerNotifications.FullNameMinLen ||
+            DomainException.When(fullName.Length < CustomerNotifications.FullNameMinLen ||
                 fullName.Length > CustomerNotifications.FullNameMaxLen,
                     CustomerNotifications.FullNameIsNullOrWhiteSpace);
 
@@ -57,10 +56,6 @@ namespace WebSales.Domain.Entities
             DomainException.When(DocumentValidations.IsCpf(document) && DocumentValidations.IsCnpj(document),
                     CustomerNotifications.DocumentInvalidNotification);
 
-            //if (DocumentValidations.IsCpf(document)) Document = document;
-            //else if (DocumentValidations.IsCnpj(document)) Document = document;
-            //else 
-
             IsLegalPerson = DocumentValidations.IsCnpj(document);
             Document = document;
         }
@@ -69,10 +64,5 @@ namespace WebSales.Domain.Entities
         {
             CustomerValidations(fullName, document);
         }
-
-        public static Customer Factory(string fullname, string document) => new(fullname, document);
-        public static Customer Factory(int? id, string? fullname, string? document, DateTime? createdAt, DateTime? modifiedAt)
-            => new(id.Value, fullname, document, createdAt.Value, modifiedAt.Value);
-
     }
 }
