@@ -11,14 +11,14 @@ namespace WebSales.Infra.Mocks
             var faker = new Faker<Sale>("pt_BR")
                 .RuleFor(s => s.Id, f => id++)
                 .RuleFor(s => s.SaleNumber, (f, s) => s.GenerateSaleNumber())
-                .RuleFor(s => s.Quantity, f => f.Random.Int(1, 20))
-                .RuleFor(s => s.Total, f => f.Random.Double(1.0, 20.0))
                 .RuleFor(s => s.CustomerId, f => f.Random.Int(1, 20))
-                .RuleFor(s => s.ProductId, f => f.Random.Int(1, 20));
+                .RuleFor(s => s.ProductId, f => f.Random.Int(1, 20))
+                .RuleFor(s => s.ProductPriceAtMoment, f => f.Random.Double(1, 20))
+                .RuleFor(s => s.ProductQuantity, f => f.Random.Int(1, 20))
+                .RuleFor(s => s.Total, (f, s) => s.ProductPriceAtMoment * s.ProductQuantity)
+                .RuleFor(s => s.SaleCancelled, false);
 
             return faker.Generate(50).ToList();
         }
-
     }
-
 }

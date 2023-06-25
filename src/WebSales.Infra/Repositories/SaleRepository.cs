@@ -58,15 +58,15 @@ namespace WebSales.Infra.Repositories
                 {
                     if (await reader.ReadAsync())
                     {
-                        sale = new Sale(
-                            (int)reader["Id"],
-                            (string)reader["SaleNumber"],
-                            (int)reader["CustomerId"],
-                            (int)reader["ProductId"],
-                            (int)reader["Quantity"],
-                            (double)reader["Total"],
-                            (DateTime)reader["CreatedAt"],
-                            (DateTime)reader["ModifiedAt"]);
+                        //sale = new Sale(
+                        //    (int)reader["Id"],
+                        //    (string)reader["SaleNumber"],
+                        //    (int)reader["CustomerId"],
+                        //    (int)reader["ProductId"],
+                        //    (int)reader["Quantity"],
+                        //    (double)reader["Total"],
+                        //    (DateTime)reader["CreatedAt"],
+                        //    (DateTime)reader["ModifiedAt"]);
                     }
                 }
             }
@@ -88,13 +88,13 @@ namespace WebSales.Infra.Repositories
             using SqlConnection connection = new(ConnectionString);
             using SqlCommand command = new(query, connection) { CommandType = CommandType.Text };
 
-            command.Parameters.AddWithValue("@SaleNumber", entity.SaleNumber);
-            command.Parameters.AddWithValue("@CustomerId", entity.CustomerId);
-            command.Parameters.AddWithValue("@ProductId", entity.ProductId);
-            command.Parameters.AddWithValue("@Quantity", entity.Quantity);
-            command.Parameters.AddWithValue("@Total", entity.Total);
-            command.Parameters.AddWithValue("@CreatedAt", DateTime.Now);
-            command.Parameters.AddWithValue("@ModifiedAt", null);
+            //command.Parameters.AddWithValue("@SaleNumber", entity.SaleNumber);
+            //command.Parameters.AddWithValue("@CustomerId", entity.CustomerId);
+            //command.Parameters.AddWithValue("@ProductId", entity.ProductId);
+            //command.Parameters.AddWithValue("@Quantity", entity.Quantity);
+            //command.Parameters.AddWithValue("@Total", entity.Total);
+            //command.Parameters.AddWithValue("@CreatedAt", DateTime.Now);
+            //command.Parameters.AddWithValue("@ModifiedAt", null);
 
             try
             {
@@ -132,17 +132,17 @@ namespace WebSales.Infra.Repositories
                 {
                     while (await reader.ReadAsync())
                     {
-                        salesList.Add(
-                            Sale.Factory(
-                            (int)reader["Id"],
-                            (string)reader["OrderNumber"],
-                            (int)reader["CustomerId"],
-                            (int)reader["ProductId"],
-                            (int)reader["Quantity"],
-                            (double)reader["Total"],
-                            (DateTime)reader["CreatedAt"],
-                            (DateTime)reader["ModifiedAt"]
-                        ));
+                        //salesList.Add(
+                        //    Sale.Factory(
+                        //    (int)reader["Id"],
+                        //    (string)reader["OrderNumber"],
+                        //    (int)reader["CustomerId"],
+                        //    (int)reader["ProductId"],
+                        //    (int)reader["Quantity"],
+                        //    (double)reader["Total"],
+                        //    (DateTime)reader["CreatedAt"],
+                        //    (DateTime)reader["ModifiedAt"]
+                        //));
                     }
                 }
             }
@@ -178,17 +178,17 @@ namespace WebSales.Infra.Repositories
                 {
                     while (await reader.ReadAsync())
                     {
-                        salesList.Add(
-                            Sale.Factory(
-                            (int)reader["Id"],
-                            (string)reader["OrderNumber"],
-                            (int)reader["CustomerId"],
-                            (int)reader["ProductId"],
-                            (int)reader["Quantity"],
-                            (double)reader["Total"],
-                            (DateTime)reader["CreatedAt"],
-                            (DateTime)reader["ModifiedAt"]
-                        ));
+                        //salesList.Add(
+                        //    Sale.Factory(
+                        //    (int)reader["Id"],
+                        //    (string)reader["OrderNumber"],
+                        //    (int)reader["CustomerId"],
+                        //    (int)reader["ProductId"],
+                        //    (int)reader["Quantity"],
+                        //    (double)reader["Total"],
+                        //    (DateTime)reader["CreatedAt"],
+                        //    (DateTime)reader["ModifiedAt"]
+                        //));
                     }
                 }
             }
@@ -234,13 +234,13 @@ namespace WebSales.Infra.Repositories
             using SqlConnection connection = new(ConnectionString);
             using SqlCommand command = new(query, connection);
 
-            command.Parameters.AddWithValue("@Id", entity.Id);
-            command.Parameters.AddWithValue("@SaleNumber", entity.SaleNumber);
-            command.Parameters.AddWithValue("@CustomerId", entity.CustomerId);
-            command.Parameters.AddWithValue("@ProductId", entity.ProductId);
-            command.Parameters.AddWithValue("@Quantity", entity.Quantity);
-            command.Parameters.AddWithValue("@Total", entity.Total);
-            command.Parameters.AddWithValue("@ModifiedAt", DateTime.Now);
+            //command.Parameters.AddWithValue("@Id", entity.Id);
+            //command.Parameters.AddWithValue("@SaleNumber", entity.SaleNumber);
+            //command.Parameters.AddWithValue("@CustomerId", entity.CustomerId);
+            //command.Parameters.AddWithValue("@ProductId", entity.ProductId);
+            //command.Parameters.AddWithValue("@Quantity", entity.Quantity);
+            //command.Parameters.AddWithValue("@Total", entity.Total);
+            //command.Parameters.AddWithValue("@ModifiedAt", DateTime.Now);
 
             try
             {
