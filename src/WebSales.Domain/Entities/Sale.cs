@@ -3,13 +3,13 @@
     public class Sale : Entity
     {
         public string SaleNumber { get; private set; }
-        public int CustomerId { get; private set; }
-        public int ProductId { get; private set; }
         public int Quantity { get; private set; }
         public double Total { get; private set; }
 
-        public Customer Customer { get; private set; }
-        public Product Product { get; private set; }
+        public int? CustomerId { get; private set; }
+        public int? ProductId { get; private set; }
+        public Customer? Customer { get; private set; }
+        public Product? Product { get; private set; }
 
         public Sale() { }
 
@@ -56,7 +56,7 @@
                 .Split('.')[0];
         }
 
-        public static Sale Factory(int id, string saleNumber, int customerId, int productId, int quantity, double total, DateTime createdAt, DateTime modifiedAt) : base(id, modifiedAt, createdAt)
+        public static Sale Factory(int id, string saleNumber, int customerId, int productId, int quantity, double total, DateTime createdAt, DateTime modifiedAt)
             => new(id, saleNumber, customerId, productId, quantity, total, createdAt, modifiedAt);
     }
 }

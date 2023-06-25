@@ -12,7 +12,7 @@ namespace WebSales.Infra.Mappings
 
             builder.Property(x => x.Id).ValueGeneratedOnAdd();
 
-            builder.Property(x => x.OrderNumber)
+            builder.Property(x => x.SaleNumber)
                 .HasMaxLength(14)
                 .HasColumnType("char")
                 .IsRequired();
@@ -26,7 +26,9 @@ namespace WebSales.Infra.Mappings
 
             builder.Property(x => x.ModifiedAt);
 
-            builder.HasOne(x => x.Customer).WithMany(y => y.CustomerSales).HasForeignKey(x => x.CustomerId);
+            builder.HasOne(x => x.Customer)
+                .WithMany(y => y.CustomerSales)
+                .HasForeignKey(x => x.CustomerId);
 
             builder.HasOne(x => x.Product)
                 .WithMany(y => y.ProductsSold)
