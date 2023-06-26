@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using WebSales.APP.Models;
+using WebSales.WebInterface.ViewModels;
 
-namespace WebSales.APP.Controllers
+namespace WebSales.WebInterface.Controllers
 {
     public class HomeController : Controller
     {

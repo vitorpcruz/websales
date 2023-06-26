@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Configuration;
 using WebSales.Infra.DependecyInjections;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,6 +6,7 @@ string connectionString = builder.Configuration.GetConnectionString("DefaultConn
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddDatabaseContextInjection(connectionString);
+builder.Services.AddAutoMapper(typeof(Program));
 
 var app = builder.Build();
 

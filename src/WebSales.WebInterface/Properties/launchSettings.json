@@ -8,7 +8,7 @@
     }
   },
   "profiles": {
-    "WebSales.APP": {
+    "WebSales.WebInterface": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,

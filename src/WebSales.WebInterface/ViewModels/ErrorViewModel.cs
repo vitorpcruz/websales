@@ -1,4 +1,4 @@
-namespace WebSales.APP.Models
+namespace WebSales.WebInterface.ViewModels
 {
     public class ErrorViewModel
     {
