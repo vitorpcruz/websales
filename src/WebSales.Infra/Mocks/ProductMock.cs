@@ -12,7 +12,7 @@ namespace WebSales.Infra.Mocks
                 .RuleFor(p => p.Id, f => id++)
                 .RuleFor(p => p.Name, f => f.Commerce.ProductName())
                 .RuleFor(p => p.Description, f => f.Commerce.ProductDescription())
-                .RuleFor(p => p.Price, f => f.Random.Double(1.0, 100.0))
+                .RuleFor(p => p.Price, f => f.Random.Decimal(1, 100))
                 .RuleFor(p => p.Quantity, f => f.Random.Int(0, 100));
 
             return faker.Generate(50).ToList();

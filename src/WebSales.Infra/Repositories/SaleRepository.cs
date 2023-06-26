@@ -7,16 +7,16 @@ namespace WebSales.Infra.Repositories
 {
     public class SaleRepository : BaseRepository, ISaleRepository
     {
-        public async Task<double> GetProfitByDateAsync(DateTime date)
+        public async Task<decimal> GetProfitByDateAsync(DateTime date)
         {
-            string query = "SELECT SUM(Sales.Total) as Value FROM Sales WHERE CreatedAt=@Date";
+            string query = "SELECT SUM(Sales.Total) as 'Total' FROM Sales WHERE CreatedAt LIKE @Date";
 
             using SqlConnection connection = new(ConnectionString);
             using SqlCommand command = new(query, connection);
 
-            command.Parameters.AddWithValue("@Date", date.ToString("d"));
+            command.Parameters.AddWithValue("@Date", "%" + date.ToString("yyyy-MM-dd") + "%");
 
-            double profitability = 0.0;
+            decimal profitability = 0;
 
             try
             {
@@ -24,9 +24,14 @@ namespace WebSales.Infra.Repositories
 
                 SqlDataReader reader = await command.ExecuteReaderAsync(CommandBehavior.CloseConnection);
 
-                if (reader.HasRows) 
+                if (reader.HasRows)
+                {
                     if (await reader.ReadAsync())
-                        profitability = (double)reader["Value"];
+                    {
+                        if (!DBNull.Value.Equals(reader["Total"]))
+                            profitability = (decimal)reader["Total"];
+                    }
+                }
             }
             catch(Exception)
             {
@@ -41,7 +46,7 @@ namespace WebSales.Infra.Repositories
 
         public async Task<Sale> FindByIdAsync(int id)
         {
-            string query = "SELECT * FROM Sale WHERE Sale.Id=@Id";
+            string query = "SELECT * FROM Sales WHERE Sales.Id=@Id";
             Sale sale = null;
 
             using SqlConnection connection = new(ConnectionString);
@@ -58,15 +63,7 @@ namespace WebSales.Infra.Repositories
                 {
                     if (await reader.ReadAsync())
                     {
-                        //sale = new Sale(
-                        //    (int)reader["Id"],
-                        //    (string)reader["SaleNumber"],
-                        //    (int)reader["CustomerId"],
-                        //    (int)reader["ProductId"],
-                        //    (int)reader["Quantity"],
-                        //    (double)reader["Total"],
-                        //    (DateTime)reader["CreatedAt"],
-                        //    (DateTime)reader["ModifiedAt"]);
+                        sale = ConvertToEntity(reader);
                     }
                 }
             }
@@ -81,25 +78,24 @@ namespace WebSales.Infra.Repositories
             return sale;
         }
 
-        public async Task<int> AddAsync(Sale entity)
+        public async Task AddAsync(Sale entity)
         {
-            string query = "INSERT INTO Sales (SaleNumber, CustomerId, ProductId, Quantity, Total, CreatedAt, ModifiedAt) VALUES (@SaleNumber, @CustomerId, @ProductId, @Quantity, @Total, @CreatedAt, @ModifiedtAt)";
-            int result;
+            string query = "INSERT INTO Sales VALUES (@SaleNumber, @ProductPriceAtMoment, @ProductQuantity, @Total, @SaleCancelled, @CustomerId, @ProductId, getdate(), null)";
             using SqlConnection connection = new(ConnectionString);
             using SqlCommand command = new(query, connection) { CommandType = CommandType.Text };
 
-            //command.Parameters.AddWithValue("@SaleNumber", entity.SaleNumber);
-            //command.Parameters.AddWithValue("@CustomerId", entity.CustomerId);
-            //command.Parameters.AddWithValue("@ProductId", entity.ProductId);
-            //command.Parameters.AddWithValue("@Quantity", entity.Quantity);
-            //command.Parameters.AddWithValue("@Total", entity.Total);
-            //command.Parameters.AddWithValue("@CreatedAt", DateTime.Now);
-            //command.Parameters.AddWithValue("@ModifiedAt", null);
+            command.Parameters.AddWithValue("@SaleNumber", entity.SaleNumber);
+            command.Parameters.AddWithValue("@ProductPriceAtMoment", entity.ProductPriceAtMoment);
+            command.Parameters.AddWithValue("@ProductQuantity", entity.ProductQuantity);
+            command.Parameters.AddWithValue("@Total", entity.Total);
+            command.Parameters.AddWithValue("@SaleCancelled", entity.SaleCancelled);
+            command.Parameters.AddWithValue("@CustomerId", entity.CustomerId);
+            command.Parameters.AddWithValue("@ProductId", entity.ProductId);
 
             try
             {
                 await OpenConnection(connection);
-                result = await command.ExecuteNonQueryAsync();
+                await command.ExecuteNonQueryAsync();
             }
             catch(Exception)
             {
@@ -109,19 +105,18 @@ namespace WebSales.Infra.Repositories
             {
                 await CheckAndCloseConnection(connection);
             }
-            return result;
         }
 
         public async Task<IEnumerable<Sale>> GetSalesListByDateAsync(DateTime date)
         {
-            string query = "SELECT * FROM Sales WHERE CreatedAt=@Date";
+            string query = "SELECT * FROM Sales WHERE Sales.CreatedAt LIKE @Date";
 
             using SqlConnection connection = new(ConnectionString);
             using SqlCommand command = new(query, connection);
 
-            command.Parameters.AddWithValue("@Date", date.ToString("d"));
+            command.Parameters.AddWithValue("@Date", "%" + date.ToString("yyyy-MM-dd") + "%");
 
-            List<Sale> salesList = null;
+            List<Sale> salesList = new List<Sale>();
 
             try
             {
@@ -132,17 +127,7 @@ namespace WebSales.Infra.Repositories
                 {
                     while (await reader.ReadAsync())
                     {
-                        //salesList.Add(
-                        //    Sale.Factory(
-                        //    (int)reader["Id"],
-                        //    (string)reader["OrderNumber"],
-                        //    (int)reader["CustomerId"],
-                        //    (int)reader["ProductId"],
-                        //    (int)reader["Quantity"],
-                        //    (double)reader["Total"],
-                        //    (DateTime)reader["CreatedAt"],
-                        //    (DateTime)reader["ModifiedAt"]
-                        //));
+                        salesList.Add(ConvertToEntity(reader));
                     }
                 }
             }
@@ -160,14 +145,14 @@ namespace WebSales.Infra.Repositories
 
         public async Task<IEnumerable<Sale>> GetSalesBySaleNumberAsync(string saleNumber)
         {
-            string query = "SELECT * FROM Sales WHERE Sales.SaleNumber=@SaleNumber";
+            string query = "SELECT * FROM Sales WHERE Sales.SaleNumber LIKE @SaleNumber";
 
             using SqlConnection connection = new(ConnectionString);
             using SqlCommand command = new(query, connection);
 
-            command.Parameters.AddWithValue("@SaleNumber", saleNumber);
+            command.Parameters.AddWithValue("@SaleNumber", "%" + saleNumber + "%");
 
-            List<Sale> salesList = null;
+            List<Sale> salesList = new();
 
             try
             {
@@ -178,17 +163,7 @@ namespace WebSales.Infra.Repositories
                 {
                     while (await reader.ReadAsync())
                     {
-                        //salesList.Add(
-                        //    Sale.Factory(
-                        //    (int)reader["Id"],
-                        //    (string)reader["OrderNumber"],
-                        //    (int)reader["CustomerId"],
-                        //    (int)reader["ProductId"],
-                        //    (int)reader["Quantity"],
-                        //    (double)reader["Total"],
-                        //    (DateTime)reader["CreatedAt"],
-                        //    (DateTime)reader["ModifiedAt"]
-                        //));
+                        salesList.Add(ConvertToEntity(reader));
                     }
                 }
             }
@@ -229,18 +204,17 @@ namespace WebSales.Infra.Repositories
 
         public async Task UpdateAsync(Sale entity)
         {
-            string query = "UPDATE Sales SET Sales.SaleNumber=@SaleNumber, Sales.CustomerId=@CustomerId, Sales.ProductId=@ProductId, Sales.Quantity=@Quantity, Sales.Total=@Total, Sales.ModifiedAt=@ModifiedAt WHERE Sales.Id=@Id";
+            if (entity == null) return;
+
+
+            string query = "UPDATE Sales SET Sales.SaleCancelled=@SaleCancelled, Sales.ModifiedAt=@ModifiedAt WHERE Sales.SaleNumber=@SaleNumber";
             
             using SqlConnection connection = new(ConnectionString);
             using SqlCommand command = new(query, connection);
 
-            //command.Parameters.AddWithValue("@Id", entity.Id);
-            //command.Parameters.AddWithValue("@SaleNumber", entity.SaleNumber);
-            //command.Parameters.AddWithValue("@CustomerId", entity.CustomerId);
-            //command.Parameters.AddWithValue("@ProductId", entity.ProductId);
-            //command.Parameters.AddWithValue("@Quantity", entity.Quantity);
-            //command.Parameters.AddWithValue("@Total", entity.Total);
-            //command.Parameters.AddWithValue("@ModifiedAt", DateTime.Now);
+            command.Parameters.AddWithValue("@SaleNumber", entity.SaleNumber);
+            command.Parameters.AddWithValue("@SaleCancelled", entity.SaleCancelled);
+            command.Parameters.AddWithValue("@ModifiedAt", entity.ModifiedAt);
 
             try
             {
@@ -255,6 +229,22 @@ namespace WebSales.Infra.Repositories
             {
                 await CheckAndCloseConnection(connection);
             }
+        }
+
+        private static Sale ConvertToEntity(SqlDataReader reader)
+        {
+            return new Sale(
+                (int)reader["Id"],
+                (string)reader["SaleNumber"],
+                (decimal)reader["ProductPriceAtMoment"],
+                (int)reader["ProductQuantity"],
+                (decimal)reader["Total"],
+                (bool)reader["SaleCancelled"],
+                DBNull.Value.Equals(reader["CustomerId"]) ? null : (int)reader["CustomerId"],
+                DBNull.Value.Equals(reader["ProductId"]) ? null : (int)reader["ProductId"],
+                (DateTime)reader["CreatedAt"],
+                DBNull.Value.Equals(reader["ModifiedAt"]) ? null : (DateTime)reader["ModifiedAt"]
+            );
         }
     }
 }

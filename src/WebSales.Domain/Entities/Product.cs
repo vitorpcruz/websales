@@ -7,22 +7,19 @@ namespace WebSales.Domain.Entities
     {
         public string Name { get; private set; }
         public string? Description { get; private set; }
-        public double Price { get; private set; }
+        public decimal Price { get; private set; }
         public int Quantity { get; private set; }
 
         public IEnumerable<Sale> ProductsSold { get; private set; }
 
         public Product() { }
 
-        private Product(string name,
-                        string? description,
-                        double price = ProductNotifications.PriceMinValue,
-                        int quantity = ProductNotifications.QuantityMinValue)
+        public Product(string name, string? description, decimal price, int quantity)
         {
-            ValidateName(name);
-            ValidateDescription(description);
-            ValidatePrice(price);
-            ValidateQuantity(quantity);
+            Name = name;
+            Description = description;
+            Price = price;
+            Quantity = quantity;
         }
 
         private void ValidateName(string name)
@@ -45,11 +42,11 @@ namespace WebSales.Domain.Entities
             Description = description;
         }
 
-        private void ValidatePrice(double price)
+        private void ValidatePrice(decimal price)
         {
-            DomainException.When(price < ProductNotifications.PriceMinValue ||
-                price > ProductNotifications.PriceMaxValue, 
-                    ProductNotifications.PriceMinMaxValueNotification);
+            //DomainException.When(price < ProductNotifications.PriceMinValue ||
+            //    price > ProductNotifications.PriceMaxValue, 
+            //        ProductNotifications.PriceMinMaxValueNotification);
 
             Price = price;
         }
@@ -61,24 +58,17 @@ namespace WebSales.Domain.Entities
             Quantity = quantity;
         }
 
-        private void UpdateProduct(string? name,
-                                    string? description,
-                                    double price = ProductNotifications.PriceMinValue,
-                                    int quantity = ProductNotifications.QuantityMinValue
-            )
-        {
-            ValidateName(name);
-            ValidateDescription(description);
-            ValidatePrice(price);
-            ValidateQuantity(quantity);
-            //UpdateEntity();
-        }
-
-        public static Product Factory(string? name,
-                                      string? description,
-                                      double price,
-                                      int quantity)
-            => new(name, description, price, quantity);
-
+        //private void UpdateProduct(string? name,
+        //                            string? description,
+        //                            decimal price = ProductNotifications.PriceMinValue,
+        //                            int quantity = ProductNotifications.QuantityMinValue
+        //    )
+        //{
+        //    ValidateName(name);
+        //    ValidateDescription(description);
+        //    ValidatePrice(price);
+        //    ValidateQuantity(quantity);
+        //    //UpdateEntity();
+        //}
     }
 }

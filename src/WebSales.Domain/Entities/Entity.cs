@@ -25,5 +25,10 @@
             CreatedAt = createdAt;
             ModifiedAt = modifiedAt;
         }
+
+        public void UpdateEntity()
+        {
+            ModifiedAt = DateTime.Now;
+        }
     }
 }

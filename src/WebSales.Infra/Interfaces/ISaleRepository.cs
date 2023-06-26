@@ -1,4 +1,5 @@
-﻿using WebSales.Domain.Entities;
+﻿using System.Runtime.CompilerServices;
+using WebSales.Domain.Entities;
 
 namespace WebSales.Infra.Interfaces
 {
@@ -6,6 +7,6 @@ namespace WebSales.Infra.Interfaces
     {
         Task<IEnumerable<Sale>> GetSalesBySaleNumberAsync(string saleNumber);
         Task<IEnumerable<Sale>> GetSalesListByDateAsync(DateTime date);
-        Task<double> GetProfitByDateAsync(DateTime date);
+        Task<decimal> GetProfitByDateAsync(DateTime date);
     }
 }

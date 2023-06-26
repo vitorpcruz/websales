@@ -13,7 +13,7 @@ namespace WebSales.Infra.Mocks
                 .RuleFor(s => s.SaleNumber, (f, s) => s.GenerateSaleNumber())
                 .RuleFor(s => s.CustomerId, f => f.Random.Int(1, 20))
                 .RuleFor(s => s.ProductId, f => f.Random.Int(1, 20))
-                .RuleFor(s => s.ProductPriceAtMoment, f => f.Random.Double(1, 20))
+                .RuleFor(s => s.ProductPriceAtMoment, f => f.Random.Decimal(1, 20))
                 .RuleFor(s => s.ProductQuantity, f => f.Random.Int(1, 20))
                 .RuleFor(s => s.Total, (f, s) => s.ProductPriceAtMoment * s.ProductQuantity)
                 .RuleFor(s => s.SaleCancelled, false);

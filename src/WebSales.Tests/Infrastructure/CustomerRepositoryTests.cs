@@ -45,11 +45,13 @@ namespace WebSales.Tests.Infastrucutre
                 _faker.Name.FullName(),
                 _faker.Person.Cpf()
             );
-            int expectedResult = 1;
 
-            var result = await _customerRepository.AddAsync(customer);
-            Assert.IsType<int>(result);
-            Assert.True(result == expectedResult) ;
+            await _customerRepository.AddAsync(customer);
+            IEnumerable<Customer> users = await _customerRepository.GetCustomersByDocumentAsync(_faker.Person.Cpf());
+            var firstUser = users.First();
+
+            Assert.Equal(customer.FullName, firstUser.FullName);
+            Assert.Equal(customer.Document, firstUser.Document);
         }
 
         [Fact]
@@ -100,7 +102,7 @@ namespace WebSales.Tests.Infastrucutre
             var partDocument = "20";
             var customers = await _customerRepository.GetCustomersByDocumentAsync(partDocument);
             Assert.NotNull(customers);
-            Assert.True(customers.Count() >= 1);
+            Assert.True(customers.Any());
         }
 
         [Fact]
@@ -110,7 +112,7 @@ namespace WebSales.Tests.Infastrucutre
             var newName = _faker.Name.FullName();
             var customer = new Customer(oldName, _faker.Person.Cpf());
 
-            _ = await _customerRepository.AddAsync(customer);
+            await _customerRepository.AddAsync(customer);
             IEnumerable<Customer> users = await _customerRepository.GetCustomersByFullNameAsync(oldName);
             
             var firstQuery = users.First();

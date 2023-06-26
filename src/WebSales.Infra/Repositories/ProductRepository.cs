@@ -11,19 +11,17 @@ namespace WebSales.Infra.Repositories
 
         public ProductRepository(ApplicationDbContext context) => _context = context;
 
-        public async Task<int> AddAsync(Product entity)
+        public async Task AddAsync(Product entity)
         {
-            //bool result;
-            //try
-            //{
-            //    await _context.Products.AddAsync(entity).Result;
-            //    await _context.SaveChangesAsync();
-            //}
-            //catch(Exception)
-            //{
-            //    throw;
-            //}
-            throw new NotImplementedException();
+            try
+            {
+                await _context.Products.AddAsync(entity);
+                var result = await _context.SaveChangesAsync();
+            }
+            catch(Exception)
+            {
+                throw;
+            }
         }
 
         public async Task<Product> FindByIdAsync(int id)

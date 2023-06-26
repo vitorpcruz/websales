@@ -26,6 +26,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\WebSales.Application\WebSales.Application.csproj" />
+    <ProjectReference Include="..\WebSales.APP\WebSales.APP.csproj" />
     <ProjectReference Include="..\WebSales.Domain\WebSales.Domain.csproj" />
     <ProjectReference Include="..\WebSales.Infra\WebSales.Infra.csproj" />
   </ItemGroup>

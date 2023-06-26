@@ -46,10 +46,9 @@ namespace WebSales.Infra.Repositories
             return customer;
         }
 
-        public async Task<int> AddAsync(Customer entity)
+        public async Task AddAsync(Customer entity)
         {
             string query = "INSERT INTO Customers (FullName, Document, IsLegalPerson, CreatedAt) VALUES (@FullName, @Document, @IsLegalPerson, @CreatedAt)";
-            int result;
 
             using SqlConnection connection = new(ConnectionString);
             using SqlCommand command = new(query, connection)
@@ -65,7 +64,7 @@ namespace WebSales.Infra.Repositories
             try
             {
                 await OpenConnection(connection);
-                result = await command.ExecuteNonQueryAsync();
+                await command.ExecuteNonQueryAsync();
             }
             catch (Exception)
             {
@@ -75,7 +74,6 @@ namespace WebSales.Infra.Repositories
             {
                 await CheckAndCloseConnection(connection);
             }
-            return result;
         }
 
         public async Task RemoveAsync(int id)
@@ -157,50 +155,6 @@ namespace WebSales.Infra.Repositories
                 await CheckAndCloseConnection(connection);
             }
             return result;
-        }
-
-        public async Task<Customer> GetCustomerByDocumentAsync(string document)
-        {
-            string query = "SELECT Customers.Id, Customers.FullName, Customers.Document, Customers.IsLegalPerson, Customers.CreatedAt, Customers.ModifiedAt FROM Customers WHERE Customers.Document LIKE @Document";
-
-            Customer? customer = null;
-
-            using SqlConnection connection = new(ConnectionString);
-            using SqlCommand command = new(query, connection);
-
-            command.Parameters.AddWithValue("@Document", "%" + document + "%");
-            try
-            {
-                await OpenConnection(connection);
-                SqlDataReader reader = await command.ExecuteReaderAsync(CommandBehavior.CloseConnection);
-                if (reader.HasRows)
-                {
-                    if (await reader.ReadAsync())
-                    {
-                        customer = new(
-                            (int)reader["Id"],
-                            (string)reader["FullName"],
-                            (string)reader["Document"],
-                            (DateTime)reader["CreatedAt"],
-                            DBNull.Value.Equals(reader["ModifiedAt"]) ? null : (DateTime)reader["ModifiedAt"]
-                        );
-                    }
-                }
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            finally
-            {
-                await CheckAndCloseConnection(connection);
-            }
-            return customer;
-        }
-
-        public Task<Customer> GetCustomerByFullNameAsync(string fullName)
-        {
-            throw new NotImplementedException();
         }
 
         public async Task<IEnumerable<Customer>> GetCustomersAsync()

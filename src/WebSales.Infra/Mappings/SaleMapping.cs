@@ -28,18 +28,17 @@ namespace WebSales.Infra.Mappings
                 .HasForeignKey(x => x.ProductId);
 
             builder.Property(x => x.ProductPriceAtMoment)
-                .HasColumnType("numeric(10,2)")
+                .HasColumnType("decimal(10,2)")
                 .IsRequired();
 
             builder.Property(x => x.ProductQuantity)
                 .IsRequired();
 
             builder.Property(x => x.Total)
-                .HasColumnType("numeric(10,2)")
+                .HasColumnType("decimal(10,2)")
                 .IsRequired();
 
             builder.Property(x => x.CreatedAt)
-                .HasColumnName("SoldDate")
                 .IsRequired();
 
             builder.Property(x => x.SaleCancelled)

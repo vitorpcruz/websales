@@ -3,9 +3,9 @@
     public class Sale : Entity
     {
         public string SaleNumber { get; private set; }
-        public double ProductPriceAtMoment { get; private set; }
+        public decimal ProductPriceAtMoment { get; private set; }
         public int ProductQuantity { get; private set; }
-        public double Total { get; private set; }
+        public decimal Total { get; private set; }
         public bool SaleCancelled { get; private set; }
 
         public int? CustomerId { get; private set; }
@@ -16,14 +16,19 @@
 
         public Sale() { }
 
+ 
+
         public Sale(
+            int id,
             string saleNumber,
-            double productPriceAtMoment,
+            decimal productPriceAtMoment,
             int productQuantity,
-            double total,
+            decimal total,
             bool saleCancelled,
             int? customerId,
-            int? productId)
+            int? productId,
+            DateTime createdAt,
+            DateTime? modifiedAt) : base(id, createdAt, modifiedAt)
         {
             SaleNumber = saleNumber;
             ProductPriceAtMoment = productPriceAtMoment;
@@ -34,18 +39,16 @@
             ProductId = productId;
         }
 
-        public Sale(int id,
-                    string saleNumber,
-                    double productPriceAtMoment,
-                    int productQuantity,
-                    double total,
-                    bool saleCancelled,
-                    int? customerId,
-                    int? productId,
-                    DateTime createdAt,
-                    DateTime? modifiedAt) : base(id, createdAt, modifiedAt)
+
+        public Sale(
+            decimal productPriceAtMoment,
+            int productQuantity,
+            decimal total,
+            bool saleCancelled,
+            int? customerId,
+            int? productId)
         {
-            SaleNumber = saleNumber;
+            SaleNumber = GenerateSaleNumber();
             ProductPriceAtMoment = productPriceAtMoment;
             ProductQuantity = productQuantity;
             Total = total;
@@ -57,19 +60,14 @@
         public void SaleValidations(Customer? customer)
         {
             SaleNumber = GenerateSaleNumber();
-            //ValidateCustomer(customer);
         }
 
-        public void UpdateSale(Customer? customer)
+        public void CancelSale()
         {
-            //ValidateCustomer(customer);
+            SaleCancelled = true;
+            UpdateEntity();
         }
-
-        //public void ValidateCustomer(Customer? customer)
-        //{
-        //    DomainException.When(customer == null, OrderNotifications.OrderNullNotification);
-        //    Customer = customer;
-        //}
+        
 
         public string GenerateSaleNumber()
         {
@@ -79,8 +77,5 @@
                 .Replace(":", "")
                 .Split('.')[0];
         }
-
-        //public static Sale Factory(int id, string saleNumber, int customerId, int productId, int productQuantity, double total, DateTime createdAt, DateTime modifiedAt)
-            //=> new(id, saleNumber, customerId, productId, productQuantity, total, createdAt, modifiedAt);
     }
 }
