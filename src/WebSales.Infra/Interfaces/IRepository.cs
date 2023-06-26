@@ -8,6 +8,5 @@ namespace WebSales.Infra.Interfaces
         Task AddAsync(TEntity entity);
         Task UpdateAsync(TEntity entity);
         Task RemoveAsync(int id);
-
     }
 }
