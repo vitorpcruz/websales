@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using WebSales.Domain.Entities;
-using WebSales.WebInterface.ViewModels;
+using WebSales.Services.DTOs;
 
 namespace WebSales.Services.Configuration
 {
@@ -10,7 +10,7 @@ namespace WebSales.Services.Configuration
         {
             //CreateMap<Sale, SaleViewModel>().ReverseMap();
             //CreateMap<Customer, CustomerViewModel>().ReverseMap();
-            CreateMap<Product, ProductViewModel>().ReverseMap();
+            CreateMap<Product, ProductDTO>().ReverseMap();
         }
     }
 }

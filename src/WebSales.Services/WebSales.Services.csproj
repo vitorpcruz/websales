@@ -15,7 +15,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\WebSales.Infra\WebSales.Infra.csproj" />
-    <ProjectReference Include="..\WebSales.WebInterface\WebSales.WebInterface.csproj" />
   </ItemGroup>
 
 </Project>

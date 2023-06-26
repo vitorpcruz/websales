@@ -14,7 +14,7 @@ namespace WebSales.WebInterface.Controllers
 
         public async Task<ActionResult> Index()
         {
-
+            return View();
         }
 
         // GET: ProductsController/Details/5

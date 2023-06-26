@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WebSales.Infra\WebSales.Infra.csproj" />
+    <ProjectReference Include="..\WebSaes.Infra.IoC\WebSales.IoC.csproj" />
   </ItemGroup>
 
 </Project>
