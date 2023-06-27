@@ -58,16 +58,6 @@ namespace WebSales.Infra.Repositories
 
         public async Task RemoveAsync(int id)
         {
-            //try
-            //{
-            //    Entity product = new Product() { Id = id };
-            //    _context.Products.Remove(x => x.Id == id);
-            //    await _context.SaveChangesAsync();
-            //}
-            //catch(Exception)
-            //{
-            //    throw;
-            //}
             throw new NotImplementedException();
         }
 
