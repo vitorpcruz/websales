@@ -1,4 +1,5 @@
-﻿using WebSales.Domain.Exceptions;
+﻿using System.Xml.Linq;
+using WebSales.Domain.Exceptions;
 using WebSales.Domain.Notifications;
 
 namespace WebSales.Domain.Entities
@@ -16,10 +17,21 @@ namespace WebSales.Domain.Entities
 
         public Product(string name, string? description, decimal price, int quantity)
         {
-            Name = name;
-            Description = description;
-            Price = price;
-            Quantity = quantity;
+            ValidateProduct(name, description, price, quantity);
+        }
+
+        private void ValidateProduct(string name, string? description, decimal price, int quantity)
+        {
+            ValidateName(name);
+            ValidateDescription(description);
+            ValidatePrice(price);
+            ValidateQuantity(quantity);
+        }
+
+        public void UpdateProduct(string name, string? description, decimal price, int quantity)
+        {
+            ValidateProduct(name, description, price, quantity);
+            UpdateEntity();
         }
 
         private void ValidateName(string name)
@@ -44,10 +56,8 @@ namespace WebSales.Domain.Entities
 
         private void ValidatePrice(decimal price)
         {
-            //DomainException.When(price < ProductNotifications.PriceMinValue ||
-            //    price > ProductNotifications.PriceMaxValue, 
-            //        ProductNotifications.PriceMinMaxValueNotification);
-
+            DomainException.When(price > ProductNotifications.PriceMaxValue, 
+                    ProductNotifications.PriceMinMaxValueNotification);
             Price = price;
         }
 
@@ -57,18 +67,5 @@ namespace WebSales.Domain.Entities
                 ProductNotifications.QuantityMinValueNotification);
             Quantity = quantity;
         }
-
-        //private void UpdateProduct(string? name,
-        //                            string? description,
-        //                            decimal price = ProductNotifications.PriceMinValue,
-        //                            int quantity = ProductNotifications.QuantityMinValue
-        //    )
-        //{
-        //    ValidateName(name);
-        //    ValidateDescription(description);
-        //    ValidatePrice(price);
-        //    ValidateQuantity(quantity);
-        //    //UpdateEntity();
-        //}
     }
 }

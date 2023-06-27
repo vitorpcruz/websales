@@ -6,5 +6,6 @@ namespace WebSales.Infra.Interfaces
     {
         Task<IEnumerable<Product>> GetProductsPurchasedByIdAsync(int id);
         Task<IEnumerable<Product>> GetProductsAsync();
+        Task RemoveAsync(Product product);
     }
 }

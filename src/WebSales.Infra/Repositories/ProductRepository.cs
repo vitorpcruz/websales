@@ -31,7 +31,6 @@ namespace WebSales.Infra.Repositories
                     .AsNoTracking()
                     .FirstOrDefaultAsync(p => p.Id == id);
                 return product;
-
             }
             catch (Exception)
             {
@@ -59,20 +58,35 @@ namespace WebSales.Infra.Repositories
 
         public async Task RemoveAsync(int id)
         {
-            try
-            {
-                _context.Remove(new { Id = id });
-                await _context.SaveChangesAsync();
-            }
-            catch(Exception)
-            {
-                throw;
-            }
+            //try
+            //{
+            //    Entity product = new Product() { Id = id };
+            //    _context.Products.Remove(x => x.Id == id);
+            //    await _context.SaveChangesAsync();
+            //}
+            //catch(Exception)
+            //{
+            //    throw;
+            //}
+            throw new NotImplementedException();
         }
 
         public async Task<IEnumerable<Product>> GetProductsAsync()
         {
             return await _context.Products.ToListAsync();
+        }
+
+        public async Task RemoveAsync(Product product)
+        {
+            try
+            {
+                _context.Products.Remove(product);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }

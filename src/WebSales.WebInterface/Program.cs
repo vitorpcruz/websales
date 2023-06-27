@@ -1,5 +1,6 @@
 using WebSales.IoC.Data;
 using WebSales.IoC.Repositories;
+using WebSales.IoC.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,8 +10,7 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbInjection(connectionString);
 builder.Services.AddRepositories(connectionString);
-builder.Services.AddAutoMapper(typeof(Program));
-
+builder.Services.AddServices();
 
 var app = builder.Build();
 

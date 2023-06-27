@@ -1,89 +1,69 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using WebSales.Infra.Interfaces;
+using WebSales.Services.DTOs;
+using WebSales.Services.Interfaces;
 
 namespace WebSales.WebInterface.Controllers
 {
     public class ProductsController : Controller
     {
-        private readonly IProductRepository _productRepository;
+        private readonly IProductService _productService;
 
-        public ProductsController(IProductRepository productRepository)
+        public ProductsController(IProductService productService)
         {
-            _productRepository = productRepository;
+            _productService = productService;
         }
 
         public async Task<ActionResult> Index()
         {
-            return View();
+            var product = await _productService.GetProductsAsync();
+            return View(product);
         }
 
-        // GET: ProductsController/Details/5
-        public ActionResult Details(int id)
+        public async Task<ActionResult> Details(int id)
         {
-            return View();
+            var product = await _productService.FindProductByIdAsync(id);
+
+            if (product == null) 
+                return RedirectToAction(nameof(Index));
+
+            return View(product);
         }
 
-        // GET: ProductsController/Create
         public ActionResult Create()
         {
-            return View();
+            var product = new ProductDTO();
+            return View(product);
         }
 
-        // POST: ProductsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<ActionResult> Create(ProductDTO productDto)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            if (!ModelState.IsValid) return View(productDto);
+            await _productService.AddProductAsync(productDto);
+            return RedirectToAction(nameof(Index));
         }
 
-        // GET: ProductsController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(int id)
         {
-            return View();
+            var product = await _productService.FindProductByIdAsync(id);
+            if (product == null) return RedirectToAction(nameof(Index));
+            return View(product);
         }
 
-        // POST: ProductsController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> Edit(ProductDTO productDto)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            if (!ModelState.IsValid) return View(productDto);
+            await _productService.UpdateProductAsync(productDto);
+            return RedirectToAction(nameof(Index));
         }
 
-        // GET: ProductsController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: ProductsController/Delete/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task Delete(int id)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            await _productService.DeleteProductAsync(id);
         }
     }
 }
