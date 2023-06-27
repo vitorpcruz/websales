@@ -63,7 +63,7 @@ namespace WebSales.Infra.Repositories
 
         public async Task<IEnumerable<Product>> GetProductsAsync()
         {
-            return await _context.Products.ToListAsync();
+            return await _context.Products.OrderByDescending(x => x.Id).ToListAsync();
         }
 
         public async Task RemoveAsync(Product product)

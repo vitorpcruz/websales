@@ -59,7 +59,7 @@ namespace WebSales.Infra.Repositories
             command.Parameters.AddWithValue("@FullName", entity.FullName);
             command.Parameters.AddWithValue("@Document", entity.Document);
             command.Parameters.AddWithValue("@IsLegalPerson", entity.IsLegalPerson);
-            command.Parameters.AddWithValue("@CreatedAt", DateTime.Now);
+            command.Parameters.AddWithValue("@CreatedAt", entity.CreatedAt);
 
             try
             {
@@ -141,10 +141,8 @@ namespace WebSales.Infra.Repositories
             try
             {
                 await OpenConnection(connection);
-                using (SqlDataReader reader = await command.ExecuteReaderAsync(CommandBehavior.CloseConnection))
-                {
-                    result = reader.HasRows;
-                }
+                using SqlDataReader reader = await command.ExecuteReaderAsync(CommandBehavior.CloseConnection);
+                result = reader.HasRows;
             }
             catch (Exception)
             {
@@ -159,7 +157,7 @@ namespace WebSales.Infra.Repositories
 
         public async Task<IEnumerable<Customer>> GetCustomersAsync()
         {
-            string query = "SELECT * FROM Customers";
+            string query = "SELECT * FROM Customers ORDER BY Customers.Id DESC";
 
             List<Customer> customers = new();
 
@@ -264,6 +262,40 @@ namespace WebSales.Infra.Repositories
                 await CheckAndCloseConnection(connection);
             }
             return customers;
+        }
+
+        public async Task<int> GetCustomerIdByDocument(string document)
+        {
+            string query = "SELECT Customers.Id FROM Customers WHERE Customers.Document=@Document";
+
+            using SqlConnection connection = new(ConnectionString);
+            using SqlCommand command = new(query, connection);
+
+            int result = 0;
+
+            command.Parameters.AddWithValue("@Document", document);
+
+            try
+            {
+                await OpenConnection(connection);
+                using SqlDataReader reader = await command.ExecuteReaderAsync(CommandBehavior.CloseConnection);
+                if (reader.HasRows)
+                {
+                    if (await reader.ReadAsync())
+                    {
+                        result = DBNull.Value.Equals(reader["Id"]) ? result : (int)reader["Id"];
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                await CheckAndCloseConnection(connection);
+            }
+            return result;
         }
     }
 }

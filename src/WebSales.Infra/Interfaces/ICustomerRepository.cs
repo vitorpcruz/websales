@@ -8,5 +8,6 @@ namespace WebSales.Infra.Interfaces
         Task<IEnumerable<Customer>> GetCustomersAsync();
         Task<IEnumerable<Customer>> GetCustomersByFullNameAsync(string fullName);
         Task<IEnumerable<Customer>> GetCustomersByDocumentAsync(string document);
+        Task<int> GetCustomerIdByDocument(string document);
     }
 }

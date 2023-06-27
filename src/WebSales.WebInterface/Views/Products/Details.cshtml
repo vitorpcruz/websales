@@ -64,13 +64,13 @@
     <a onclick=deleteByID(@Model.Id) class="btn btn-danger">Delete</a>
 </div>
 
-<script src="~/js/axios.min.js"></script>
 <script type="text/javascript">
     async function deleteByID(id) {
         if (confirm("Do you want delete this product?")) {
             await axios.post(`@(Url.Action("Delete", "Products"))/${id}`)
                 .then(response => console.log(response))
                 .catch(error => console.log(error))
+            alert("Product  deleted successfully")
 
             window.location = `@(Url.Action("Index", "Products"))`
         } else {

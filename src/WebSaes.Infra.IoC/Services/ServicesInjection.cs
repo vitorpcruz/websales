@@ -10,7 +10,9 @@ namespace WebSales.IoC.Services
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
             services.AddAutoMapper(typeof(AutoMapperConfig));
+
             services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<ICustomerService, CustomerService>();
 
             return services;
         }

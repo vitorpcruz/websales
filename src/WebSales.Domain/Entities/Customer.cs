@@ -51,7 +51,7 @@ namespace WebSales.Domain.Entities
         private void ValidateDocument(string document)
         {
             DomainException.When(string.IsNullOrWhiteSpace(document),
-                CustomerNotifications.DocumentNullOrWhiteSpaceNotificatation);
+                CustomerNotifications.DocumentNullOrWhiteSpaceNotification);
 
             DomainException.When(DocumentValidations.IsCpf(document) && DocumentValidations.IsCnpj(document),
                     CustomerNotifications.DocumentInvalidNotification);
@@ -63,6 +63,7 @@ namespace WebSales.Domain.Entities
         public void UpdateCustomer(string fullName, string document)
         {
             CustomerValidations(fullName, document);
+            UpdateEntity();
         }
     }
 }

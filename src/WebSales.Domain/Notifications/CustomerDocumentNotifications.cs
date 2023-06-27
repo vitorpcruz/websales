@@ -6,6 +6,6 @@
         public const int CnpjLen = 14;
 
         public static string DocumentInvalidNotification = "The document not is CPF or CNPJ.";
-        public static string DocumentNullOrWhiteSpaceNotificatation = "The document cannot be null or white space.";
+        public static string DocumentNullOrWhiteSpaceNotification = "The document cannot be null or white space.";
     }
 }

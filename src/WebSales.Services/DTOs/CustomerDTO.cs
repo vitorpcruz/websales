@@ -1,12 +1,28 @@
-﻿namespace WebSales.Services.DTOs
+﻿using System.ComponentModel.DataAnnotations;
+using WebSales.Service.Validations;
+
+namespace WebSales.Services.DTOs
 {
     public class CustomerDTO
     {
-        public int? Id { get; private set; }
-        public string? FullName { get; private set; }
-        public string? Document { get; private set; }
-        public bool? IsLegalPerson { get; private set; }
-        public DateTime? CreatedAt { get; private set; }
-        public DateTime? ModifiedAt { get; private set; }
+        public int? Id { get; set; }
+
+        [Required(ErrorMessage = "{0} is required")]
+        [Display(Name = "Full name")]
+        public string? FullName { get; set; }
+
+        [DocumentValidation]
+        [Required(ErrorMessage = "{0} is required")]
+        public string? Document { get; set; }
+
+
+        [Display(Name = "Is Legal Person")]
+        public bool? IsLegalPerson { get; set; }
+
+        [Display(Name = "Created At")]
+        public DateTime? CreatedAt { get; set; }
+
+        [Display(Name = "Modified At")]
+        public DateTime? ModifiedAt { get; set; }
     }
 }

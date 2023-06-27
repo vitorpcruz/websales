@@ -9,7 +9,7 @@ namespace WebSales.Services.Configuration
         public AutoMapperConfig()
         {
             //CreateMap<Sale, SaleViewModel>().ReverseMap();
-            //CreateMap<Customer, CustomerViewModel>().ReverseMap();
+            CreateMap<Customer, CustomerDTO>().ReverseMap();
             CreateMap<Product, ProductDTO>().ReverseMap();
         }
     }
