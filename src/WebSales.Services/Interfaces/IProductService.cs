@@ -1,4 +1,5 @@
-﻿using WebSales.Domain.Entities;
+﻿using AutoMapper.Configuration.Conventions;
+using WebSales.Domain.Entities;
 using WebSales.Services.DTOs;
 
 namespace WebSales.Services.Interfaces
@@ -11,5 +12,6 @@ namespace WebSales.Services.Interfaces
         Task UpdateProductAsync(ProductDTO productDto);
         Task DeleteProductAsync(int id);
         Task<IEnumerable<ProductDTO>> ProductsPurchasedByCustomerAsync(int id);
+        Task ChangeStockValuesAsync(int id, int quantity);
     }
 }

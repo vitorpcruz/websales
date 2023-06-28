@@ -54,5 +54,13 @@ namespace WebSales.Services.Application
             var productsDto = _mapper.Map<IEnumerable<ProductDTO>>(products);
             return productsDto;
         }
+
+        public async Task ChangeStockValuesAsync(int id, int quantity)
+        {
+            var product = await _productRepository.FindByIdAsync(id);
+            product.UpdateProduct(product.Name, product.Description, product.Price, (product.Quantity - quantity));
+            await _productRepository.UpdateAsync(product);
+
+        }
     }
 }

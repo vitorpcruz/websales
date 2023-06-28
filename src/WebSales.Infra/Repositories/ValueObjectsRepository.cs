@@ -88,7 +88,8 @@ namespace WebSales.Infra.Repositories
                 FROM Sales
                 LEFT JOIN Products ON Sales.ProductId = Products.Id
                 LEFT JOIN Customers ON Sales.CustomerId = Customers.Id
-                WHERE Sales.CreatedAt LIKE @Date";
+                WHERE Sales.CreatedAt LIKE @Date
+                ORDER BY Sales.Id DESC";
 
 
             using SqlConnection connection = new(ConnectionString);

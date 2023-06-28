@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Runtime.InteropServices;
 using WebSales.Domain.ValueObjects;
 using WebSales.Services.DTOs;
 using WebSales.Services.Interfaces;
@@ -9,12 +10,14 @@ namespace WebSales.WebInterface.Controllers
     public class SalesController : Controller
     {
         private readonly ISaleService _saleService;
+        private readonly IProductService _productService;
         private readonly IValueObjectService _valueObjectsService;
 
-        public SalesController(ISaleService saleService, IValueObjectService productSoldService)
+        public SalesController(ISaleService saleService, IValueObjectService productSoldService, IProductService productService)
         {
             _saleService = saleService;
             _valueObjectsService = productSoldService;
+            _productService = productService;
         }
 
         public async Task<ActionResult> Index()
@@ -42,27 +45,36 @@ namespace WebSales.WebInterface.Controllers
 
         public async Task<ActionResult> RegisterSale()
         {
-            var saleCustomersProducts = await _valueObjectsService.GetCustomersAndProductsForSale();
+            //SaleDTO sale = await GetSaleCustomerProductsAndViewBags();
+            await GetSaleCustomerProductsAndViewBags();
             var sale = new SaleDTO();
+            return View(sale);
+        }
+
+        private async Task GetSaleCustomerProductsAndViewBags()
+        {
+            var saleCustomersProducts = await _valueObjectsService.GetCustomersAndProductsForSale();
             ViewBag.CustomersDTO = saleCustomersProducts.CustomersForSaleDTO;
             ViewBag.ProductsDTO = saleCustomersProducts.ProductsForSaleDTO;
-            return View(sale);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult RegisterSale(SaleDTO sale)
+        public async Task<ActionResult> RegisterSale(SaleDTO saleDto)
         {
+            var product = await _productService.FindProductByIdAsync(saleDto.ProductId.Value);
 
-            if (!ModelState.IsValid) return View(sale);
-            try
+            if (saleDto.ProductQuantity > product.Quantity)
             {
-                return RedirectToAction(nameof(Index));
+                ModelState.AddModelError("ProductQuantity", "The product quantity cannot be greater than product stock quantity");
+                await GetSaleCustomerProductsAndViewBags();
+                return View(saleDto);
             }
-            catch
-            {
-                return View();
-            }
+
+            if (!ModelState.IsValid) return View(saleDto);
+            await _saleService.RegisterSalesAsync(saleDto);
+            await _productService.ChangeStockValuesAsync(saleDto.ProductId.Value, saleDto.ProductQuantity.Value);
+            return RedirectToAction(nameof(Index));
         }
 
         public ActionResult Edit(int id)

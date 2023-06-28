@@ -11,7 +11,6 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbInjection(connectionString);
 builder.Services.AddRepositories(connectionString);
 builder.Services.AddServices();
-//builder.Services.AddEndpointsApiExplorer();
 
 var app = builder.Build();
 

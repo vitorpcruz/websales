@@ -27,23 +27,23 @@
             </div>
             <div class="form-group">
                 <label class="control-label">Quantity at Stock</label>
-                <input id="quantityStock" class="form-control" disabled  />
+                <input id="quantityStock" class="form-control" readonly="readonly" />
             </div>
             <div class="form-group">
                 <label asp-for="ProductPriceAtMoment" class="control-label">Product Price</label>
-                <input asp-for="ProductPriceAtMoment" class="form-control" disabled />
+                <input asp-for="ProductPriceAtMoment" class="form-control" readonly="readonly" />
                 <span asp-validation-for="ProductPriceAtMoment" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Total" class="control-label">Total</label>
-                <input id="Total" asp-for="Total" class="form-control" disabled />
+                <input asp-for="Total " class="form-control" readonly="readonly" />
                 <span asp-validation-for="Total" class="text-danger"></span>
             </div>
             <input asp-for="CreatedAt" value="@DateTime.Now" type="hidden" />
             <input asp-for="ModifiedAt" value="@null" type="hidden" />
             <input asp-for="SaleCancelled" value="@false" type="hidden" />
-            <input asp-for="CustomerId" value="1" hidden />
-            <input asp-for="ProductId" value="1" hidden />
+            <input asp-for="CustomerId" value="1" type="hidden" />
+            <input asp-for="ProductId" value="1" type="hidden" type="hidden" />
 
             <button id="calculate" onclick="calculateTotal()">Calculate</button>
 
@@ -66,12 +66,12 @@
         event.preventDefault()
     });
 
-    function changeCustomerId(e) {
-        document.getElementById("CustomerId").value = e.value
+    function changeCustomerId(element) {
+        document.getElementById("CustomerId").value = element.value
     }
 
-    function changeProductsId(e) {
-        document.getElementById("ProductId").value = e.value
+    function changeProductsId(element) {
+        document.getElementById("ProductId").value = element.value
     }
 
     async function calculateTotal() {
@@ -79,9 +79,8 @@
         let product = await axios.get(`@Url.Action("FindProductById", "Products")/${productId}`).then(r => r.data).catch(console.log)
         document.getElementById("quantityStock").value = product["quantity"]
         document.getElementById("ProductPriceAtMoment").value = product["price"]
-        document.getElementById("Total").value = (
-            document.getElementById("ProductQuantity").value * 
-            document.getElementById("ProductPriceAtMoment").value
-            ).toFixed(2)
+        document.getElementById("Total").value = (document.getElementById("ProductQuantity").value * document.getElementById("ProductPriceAtMoment").value).toFixed(2)
+
+
     }
 </script>
