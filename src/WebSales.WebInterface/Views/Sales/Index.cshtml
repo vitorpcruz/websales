@@ -1,0 +1,82 @@
+﻿@model IEnumerable<WebSales.Services.DTOs.SaleCompleteDTO>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<header>
+    <nav>
+        <ul>
+            <li><a asp-action="BestSeillingProducts" asp-controller="Sales">Get Best Selling Product List</a></li>
+            <li><a asp-action="PurchasesMadebyValidCustomers" asp-controller="Sales">Sales with registered customers</a></li>
+        </ul>
+    </nav>
+</header>
+
+<div>
+    <form asp-action="">
+        <label>Find Products Purchased By Customer Id</label>
+        <input type="number" />
+        <button></button>
+    </form>
+</div>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.SaleNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductPriceAtMoment)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductQuantity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Total)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CustomerFullName)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.SaleNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductPriceAtMoment)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductQuantity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Total)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CustomerFullName)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

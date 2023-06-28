@@ -13,9 +13,11 @@ namespace WebSales.IoC.Services
 
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<ICustomerService, CustomerService>();
+            services.AddScoped<ISaleService, SaleService>();
+
+            services.AddScoped<IValueObjectService, ValueObjectService>();
 
             return services;
         }
     }
-
 }

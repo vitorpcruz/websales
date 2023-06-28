@@ -12,7 +12,7 @@ namespace WebSales.IoC.Repositories
             services.AddScoped<ICustomerRepository, CustomerRepository>();
             services.AddScoped<ISaleRepository, SaleRepository>();
 
-            services.AddTransient<IProductSoldRepository, ProductSoldRepository>();
+            services.AddScoped<IValueObjectsRepository, ValueObjectsRepository>();
 
             return services;
         }

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using WebSales.Domain.ValueObjects;
 using WebSales.Service.Validations;
 
 namespace WebSales.Services.DTOs
@@ -24,5 +25,8 @@ namespace WebSales.Services.DTOs
 
         [Display(Name = "Modified At")]
         public DateTime? ModifiedAt { get; set; }
+
+        public IEnumerable<ProductDTO> ProductsPurchased { get; set; }
+
     }
 }

@@ -1,0 +1,87 @@
+﻿@model WebSales.Services.DTOs.SaleDTO
+
+@{
+    ViewData["Title"] = "RegisterSale";
+}
+
+<h1>RegisterSale</h1>
+
+<h4>SaleDTO</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="RegisterSale">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label class="control-label">teste</label>
+                @Html.DropDownList("CustomersDTO", new SelectList(ViewBag.CustomersDTO, "Id", "FullName"), new{ @class="form-control", @onchange="changeCustomerId(this)" })
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductId" class="control-label">Product ID</label>
+                @Html.DropDownList("ProductsDTO", new SelectList(ViewBag.ProductsDTO, "Id", "Name"), new{ @class="form-control", @onchange="changeProductsId(this)" })
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductQuantity" class="control-label">Product Quantity</label>
+                <input asp-for="ProductQuantity" class="form-control" onblur="calculateTotal()" />
+                <span asp-validation-for="ProductQuantity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Quantity at Stock</label>
+                <input id="quantityStock" class="form-control" disabled  />
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductPriceAtMoment" class="control-label">Product Price</label>
+                <input asp-for="ProductPriceAtMoment" class="form-control" disabled />
+                <span asp-validation-for="ProductPriceAtMoment" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Total" class="control-label">Total</label>
+                <input id="Total" asp-for="Total" class="form-control" disabled />
+                <span asp-validation-for="Total" class="text-danger"></span>
+            </div>
+            <input asp-for="CreatedAt" value="@DateTime.Now" type="hidden" />
+            <input asp-for="ModifiedAt" value="@null" type="hidden" />
+            <input asp-for="SaleCancelled" value="@false" type="hidden" />
+            <input asp-for="CustomerId" value="1" hidden />
+            <input asp-for="ProductId" value="1" hidden />
+
+            <button id="calculate" onclick="calculateTotal()">Calculate</button>
+
+            <div class="form-group">
+                <input type="submit" value="RegisterSale" class="btn btn-primary" />
+                <a asp-action="Index">Back to List</a>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+<script type="text/javascript">
+    document.getElementById("calculate").addEventListener("click", function (event) {
+        event.preventDefault()
+    });
+
+    function changeCustomerId(e) {
+        document.getElementById("CustomerId").value = e.value
+    }
+
+    function changeProductsId(e) {
+        document.getElementById("ProductId").value = e.value
+    }
+
+    async function calculateTotal() {
+        let productId = Number(document.getElementById("ProductId").value);
+        let product = await axios.get(`@Url.Action("FindProductById", "Products")/${productId}`).then(r => r.data).catch(console.log)
+        document.getElementById("quantityStock").value = product["quantity"]
+        document.getElementById("ProductPriceAtMoment").value = product["price"]
+        document.getElementById("Total").value = (
+            document.getElementById("ProductQuantity").value * 
+            document.getElementById("ProductPriceAtMoment").value
+            ).toFixed(2)
+    }
+</script>

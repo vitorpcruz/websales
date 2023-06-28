@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections;
 using WebSales.Domain.Entities;
 using WebSales.Services.DTOs;
 using WebSales.Services.Interfaces;
@@ -9,10 +10,14 @@ namespace WebSales.WebInterface.Controllers
     public class CustomersController : Controller
     {
         private readonly ICustomerService _customerService;
+        private readonly IProductService _productService;
+        private readonly IValueObjectService _valueObjectService;
 
-        public CustomersController(ICustomerService customerService)
+        public CustomersController(ICustomerService customerService, IValueObjectService valueObjectService, IProductService productService)
         {
             _customerService = customerService;
+            _valueObjectService = valueObjectService;
+            _productService = productService;
         }
 
         public async Task<ActionResult> Index()
@@ -24,6 +29,8 @@ namespace WebSales.WebInterface.Controllers
         public async Task<ActionResult> Details(int id)
         {
             var customerDto = await _customerService.FindCustomerByIdAsync(id);
+            var productsDto = await _productService.ProductsPurchasedByCustomerAsync(id);
+            customerDto.ProductsPurchased = productsDto;
             if (customerDto == null) return RedirectToAction(nameof(Index));
             return View(customerDto);
         }
@@ -79,7 +86,6 @@ namespace WebSales.WebInterface.Controllers
         }
 
         [HttpPost]
-        //[ValidateAntiForgeryToken]
         public async Task Delete(int id)
         {
             await _customerService.RemoveCustomerByIdAsync(id);

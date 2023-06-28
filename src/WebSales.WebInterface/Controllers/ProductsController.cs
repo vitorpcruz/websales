@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using WebSales.Services.DTOs;
 using WebSales.Services.Interfaces;
 
@@ -64,6 +65,12 @@ namespace WebSales.WebInterface.Controllers
         public async Task Delete(int id)
         {
             await _productService.DeleteProductAsync(id);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> FindProductById(int id)
+        {
+            return Ok(await _productService.FindProductByIdAsync(id));
         }
     }
 }

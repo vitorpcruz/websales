@@ -2,6 +2,7 @@
 using WebSales.Domain.Entities;
 using WebSales.Infra.Interfaces;
 using WebSales.Infra.Data;
+using WebSales.Domain.ValueObjects;
 
 namespace WebSales.Infra.Repositories
 {
@@ -38,11 +39,6 @@ namespace WebSales.Infra.Repositories
             }
         }
 
-        public async Task<IEnumerable<Product>> GetProductsPurchasedByIdAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task UpdateAsync(Product entity)
         {
             try
@@ -77,6 +73,16 @@ namespace WebSales.Infra.Repositories
             {
                 throw;
             }
+        }
+
+        public async Task<IEnumerable<Product>> ProductsPurchasedByCustomerAsync(int id)
+        {
+            var query = from p in _context.Products
+                        join s in _context.Sales on p.Id equals s.ProductId
+                        join c in _context.Customers on s.CustomerId equals c.Id
+                        where c.Id == id
+                        select new Product(p.Name, p.Description, p.Price, p.Quantity)                        ;
+            return await query.ToListAsync();
         }
     }
 }

@@ -47,5 +47,12 @@ namespace WebSales.Services.Application
             product.UpdateProduct(productDto.Name, product.Description, product.Price, product.Quantity);
             await _productRepository.UpdateAsync(product);
         }
+
+        public async Task<IEnumerable<ProductDTO>> ProductsPurchasedByCustomerAsync(int id)
+        {
+            var products = await _productRepository.ProductsPurchasedByCustomerAsync(id);
+            var productsDto = _mapper.Map<IEnumerable<ProductDTO>>(products);
+            return productsDto;
+        }
     }
 }

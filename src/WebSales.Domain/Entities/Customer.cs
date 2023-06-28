@@ -1,6 +1,7 @@
 ﻿using WebSales.Domain.Exceptions;
 using WebSales.Domain.Notifications;
 using WebSales.Domain.Utils;
+using WebSales.Domain.ValueObjects;
 
 namespace WebSales.Domain.Entities
 {
@@ -11,6 +12,7 @@ namespace WebSales.Domain.Entities
         public bool IsLegalPerson { get; private set; }
 
         public IEnumerable<Sale> CustomerSales { get; set; }
+        public IEnumerable<Product> ProductsPurchased { get; set; }
 
         public Customer() { }
 

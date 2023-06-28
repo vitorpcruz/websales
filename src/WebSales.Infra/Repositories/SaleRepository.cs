@@ -1,6 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using System.Data;
 using WebSales.Domain.Entities;
+using WebSales.Domain.ValueObjects;
 using WebSales.Infra.Interfaces;
 
 namespace WebSales.Infra.Repositories
@@ -109,7 +110,7 @@ namespace WebSales.Infra.Repositories
 
         public async Task<IEnumerable<Sale>> GetSalesListByDateAsync(DateTime date)
         {
-            string query = "SELECT * FROM Sales WHERE Sales.CreatedAt LIKE @Date";
+            string query = "SELECT * FROM Sales WHERE Sales.CreatedAt LIKE @Date GROUP BY SaleNumber";
 
             using SqlConnection connection = new(ConnectionString);
             using SqlCommand command = new(query, connection);

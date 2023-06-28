@@ -1,16 +1,21 @@
-﻿namespace WebSales.Services.DTOs
+﻿using WebSales.Domain.ValueObjects;
+
+namespace WebSales.Services.DTOs
 {
     public class SaleDTO
     {
-        public int? Id { get; private set; }
-        public string? SaleNumber { get; private set; }
-        public decimal? ProductPriceAtMoment { get; private set; }
-        public int? ProductQuantity { get; private set; }
-        public decimal? Total { get; private set; }
-        public bool SaleCancelled { get; private set; }
-        public int? CustomerId { get; private set; }
-        public int? ProductId { get; private set; }
-        public DateTime? CreatedAt { get; private set; }
-        public DateTime? ModifiedAt { get; private set; }
+        public int? Id { get; set; }
+        public string? SaleNumber { get; set; }
+        public decimal? ProductPriceAtMoment { get; set; }
+        public int? ProductQuantity { get; set; }
+        public decimal? Total { get; set; }
+        public bool SaleCancelled { get; set; }
+        public int? CustomerId { get; set; }
+        public int? ProductId { get; set; }
+        public DateTime? CreatedAt { get; set; }
+        public DateTime? ModifiedAt { get; set; }
+
+        public IEnumerable<CustomerForSaleDTO>? CustomersDTO { get; set; }
+        public IEnumerable<ProductForSaleDTO>? ProductsDTO { get; set; }
     }
 }

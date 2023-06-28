@@ -8,15 +8,13 @@ namespace WebSales.WebInterface.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly IProductService _productService;
 
-        public HomeController(ILogger<HomeController> logger, IProductService productService)
+        public HomeController(ILogger<HomeController> logger, IProductService productService, ISaleService saleService)
         {
             _logger = logger;
-            _productService = productService;
         }
 
-        public IActionResult IndexAsync()
+        public async Task<IActionResult> IndexAsync()
         {
             return View();
         }

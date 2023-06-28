@@ -1,4 +1,5 @@
-﻿@model WebSales.Services.DTOs.CustomerDTO
+﻿@using WebSales.Services.DTOs;
+@model WebSales.Services.DTOs.CustomerDTO
 
 @{
     ViewData["Title"] = "Details";
@@ -53,6 +54,42 @@
     <a asp-action="Index" class="btn btn-primary">Back to List</a>
     <a onclick=deleteByID(@Model.Id) class="btn btn-danger">Delete</a>
 </div>
+<hr />
+
+<h1>Products purchased by this customer</h1>
+
+<table class="table table-hover table-striped thead-dark">
+    <thead>
+        <tr>
+            <th>
+                Name
+            </th>
+            <th>
+                Quantity
+            </th>
+            <th>
+                Price
+            </th>
+        </tr>
+        </thead>
+    <tbody>
+            @foreach (var item in Model.ProductsPurchased)
+            {
+            <tr>
+                <td>
+                    @item.Name
+                </td>
+                <td>
+                    @item.Quantity
+                </td>
+                <td>
+                    R$ @item.Price
+                </td>
+            </tr>
+            }
+    </tbody>
+</table>
+
 
 <script type="text/javascript">
     async function deleteByID(id) {
