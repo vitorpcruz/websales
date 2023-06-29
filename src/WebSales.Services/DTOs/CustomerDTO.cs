@@ -26,7 +26,7 @@ namespace WebSales.Services.DTOs
         [Display(Name = "Modified At")]
         public DateTime? ModifiedAt { get; set; }
 
-        public IEnumerable<ProductDTO> ProductsPurchased { get; set; }
+        public IEnumerable<ProductDTO>? ProductsPurchased { get; set; }
 
     }
 }

@@ -46,9 +46,9 @@ namespace WebSales.Domain.Entities
             Name = name;
         }
 
-        private void ValidateDescription(string description)
+        private void ValidateDescription(string? description)
         {
-            DomainException.When(description.Length > ProductNotifications.DescriptionMaxLen, 
+            DomainException.When(description?.Length > ProductNotifications.DescriptionMaxLen, 
                 ProductNotifications.DescriptionMaxLenNotification);
 
             Description = description;
