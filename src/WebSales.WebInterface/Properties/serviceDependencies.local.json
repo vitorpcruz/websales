@@ -1,11 +1,3 @@
 {
-  "dependencies": {
-    "mssql1": {
-      "serviceConnectorResourceId": "",
-      "secretStore": null,
-      "type": "mssql.local",
-      "connectionId": "ConnectionStrings:WebSalesDb",
-      "dynamicId": null
-    }
-  }
+  "dependencies": {}
 }
