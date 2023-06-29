@@ -14,7 +14,7 @@ namespace WebSales.Infra.Mocks
                 .RuleFor(c => c.FullName, f => f.Name.FullName())
                 .RuleFor(c => c.Document, f => f.Person.Cpf());
 
-            return faker.Generate(50).ToList();
+            return faker.Generate(10).ToList();
         }
     }
 }

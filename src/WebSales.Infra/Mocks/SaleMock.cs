@@ -1,10 +1,9 @@
-﻿using Bogus;
-using WebSales.Domain.Entities;
-
+﻿
 namespace WebSales.Infra.Mocks
 {
     public static class SaleMock
     {
+        /*
         public static List<Sale> GenerateSaleMock()
         {
             int id = 1;
@@ -20,5 +19,6 @@ namespace WebSales.Infra.Mocks
 
             return faker.Generate(50).ToList();
         }
+        */
     }
 }

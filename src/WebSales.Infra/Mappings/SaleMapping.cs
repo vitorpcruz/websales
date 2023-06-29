@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WebSales.Domain.Entities;
-using WebSales.Infra.Mocks;
 
 namespace WebSales.Infra.Mappings
 {
@@ -45,7 +44,7 @@ namespace WebSales.Infra.Mappings
                 .HasDefaultValue(false)
                 .IsRequired();
 
-            builder.HasData(SaleMock.GenerateSaleMock());
+            //builder.HasData(SaleMock.GenerateSaleMock());
         }
     }
 }

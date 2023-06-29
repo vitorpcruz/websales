@@ -15,7 +15,7 @@ namespace WebSales.Infra.Mocks
                 .RuleFor(p => p.Price, f => f.Random.Decimal(1, 100))
                 .RuleFor(p => p.Quantity, f => f.Random.Int(0, 100));
 
-            return faker.Generate(50).ToList();
+            return faker.Generate(10).ToList();
         }
     }
 }
