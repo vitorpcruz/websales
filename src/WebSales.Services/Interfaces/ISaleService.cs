@@ -1,5 +1,4 @@
-﻿using WebSales.Domain.ValueObjects;
-using WebSales.Services.DTOs;
+﻿using WebSales.Services.DTOs;
 
 namespace WebSales.Services.Interfaces
 {
@@ -7,5 +6,9 @@ namespace WebSales.Services.Interfaces
     {
         Task<decimal> GetTodayProfitAsync();
         Task RegisterSalesAsync(SaleDTO saleDto);
+        Task<SaleDTO> GetSaleBySaleNumber(string saleNumber);
+        Task CancelSaleBySaleNumberAsync(string saleNumber);
+        Task RevertCancelledSaleBySaleNumberAsync(string saleNumber);
+        Task DeleteSaleAsync(int id);
     }
 }

@@ -37,7 +37,6 @@
             ProductId = productId;
         }
 
-
         public Sale(
             decimal productPriceAtMoment,
             int productQuantity,
@@ -65,6 +64,7 @@
             SaleCancelled = true;
             UpdateEntity();
         }
+
         public string GenerateSaleNumber()
         {
             return DateTime.Now.ToString("o")
@@ -74,19 +74,9 @@
                 .Split('.')[0];
         }
 
-
         public void AddGenerateSaleNumber()
         {
             SaleNumber = GenerateSaleNumber();
         }
-
-        // public string GenerateSaleNumber()
-        //{
-        //    return DateTime.Now.ToString("o")
-        //        .Replace("-", "")
-        //        .Replace("T", "")
-        //        .Replace(":", "")
-        //        .Split('.')[0];
-        //}
     }
 }

@@ -4,12 +4,10 @@
     ViewData["Title"] = "BestSeillingProducts";
 }
 
-<h1>BestSeillingProducts</h1>
+<h1>Best Seilling Products</h1>
+<a asp-action="Index" class="btn btn-primary">Back to List</a>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
+<table class="table table-hover table-striped thead-dark">
     <thead>
         <tr>
             <th>
@@ -28,7 +26,7 @@
                     @Html.DisplayFor(modelItem => item.Name)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Total)
+                    R$ @Html.DisplayFor(modelItem => item.Total)
                 </td>
             </tr>
     }

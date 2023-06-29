@@ -8,5 +8,6 @@
         public decimal Total { get;  set; }
         public string? ProductName { get;  set; }
         public string? CustomerFullName { get;  set; }
+        public bool SaleCancelled { get;  set; }
     }
 }

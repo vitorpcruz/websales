@@ -5,8 +5,10 @@ namespace WebSales.Infra.Interfaces
 {
     public interface ISaleRepository : IRepository<Sale>
     {
-        Task<IEnumerable<Sale>> GetSalesBySaleNumberAsync(string saleNumber);
+        Task<Sale> GetSaleBySaleNumberAsync(string saleNumber);
         Task<IEnumerable<Sale>> GetSalesListByDateAsync(DateTime date);
         Task<decimal> GetProfitByDateAsync(DateTime date);
+        Task CancelSaleBySaleNumberAsync(string saleNumber);
+        Task RevertCancelledSaleBySaleNumberAsync(string saleNumber);
     }
 }

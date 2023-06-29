@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
-using System.Security.Cryptography.X509Certificates;
 using WebSales.Domain.Entities;
 using WebSales.Infra.Interfaces;
-using WebSales.Infra.Repositories;
 using WebSales.Services.DTOs;
 using WebSales.Services.Interfaces;
 
@@ -31,6 +29,28 @@ namespace WebSales.Services.Application
             var sale = _mapper.Map<Sale>(saleDto);
             sale.AddGenerateSaleNumber();
             await _saleRepository.AddAsync(sale);
+        }
+
+        public async Task<SaleDTO> GetSaleBySaleNumber(string saleNumber)
+        {
+            var sale = await _saleRepository.GetSaleBySaleNumberAsync(saleNumber);
+            var saleDto = _mapper.Map<SaleDTO>(sale);
+            return saleDto;
+        }
+
+        public async Task CancelSaleBySaleNumberAsync(string saleNumber)
+        {
+            await _saleRepository.CancelSaleBySaleNumberAsync(saleNumber);
+        }
+
+        public async Task RevertCancelledSaleBySaleNumberAsync(string saleNumber)
+        {
+            await _saleRepository.RevertCancelledSaleBySaleNumberAsync(saleNumber);
+        }
+
+        public async Task DeleteSaleAsync(int id)
+        {
+            await _saleRepository.RemoveAsync(id);
         }
     }
 }

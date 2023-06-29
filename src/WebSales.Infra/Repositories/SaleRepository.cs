@@ -1,7 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using System.Data;
+using System.Runtime.InteropServices;
 using WebSales.Domain.Entities;
-using WebSales.Domain.ValueObjects;
 using WebSales.Infra.Interfaces;
 
 namespace WebSales.Infra.Repositories
@@ -10,7 +10,7 @@ namespace WebSales.Infra.Repositories
     {
         public async Task<decimal> GetProfitByDateAsync(DateTime date)
         {
-            string query = "SELECT SUM(Sales.Total) as 'Total' FROM Sales WHERE CreatedAt LIKE @Date";
+            string query = "SELECT SUM(Sales.Total) as 'Total' FROM Sales WHERE CreatedAt LIKE @Date AND SaleCancelled=0";
 
             using SqlConnection connection = new(ConnectionString);
             using SqlCommand command = new(query, connection);
@@ -34,7 +34,7 @@ namespace WebSales.Infra.Repositories
                     }
                 }
             }
-            catch(Exception)
+            catch (Exception)
             {
                 throw;
             }
@@ -54,12 +54,12 @@ namespace WebSales.Infra.Repositories
             using SqlCommand command = new(query, connection);
 
             command.Parameters.AddWithValue("@Id", id);
-                
+
             try
             {
                 await OpenConnection(connection);
                 using SqlDataReader reader = await command.ExecuteReaderAsync(CommandBehavior.CloseConnection);
-                    
+
                 if (reader.HasRows)
                 {
                     if (await reader.ReadAsync())
@@ -68,7 +68,7 @@ namespace WebSales.Infra.Repositories
                     }
                 }
             }
-            catch(Exception)
+            catch (Exception)
             {
                 throw;
             }
@@ -98,7 +98,7 @@ namespace WebSales.Infra.Repositories
                 await OpenConnection(connection);
                 await command.ExecuteNonQueryAsync();
             }
-            catch(Exception)
+            catch (Exception)
             {
                 throw;
             }
@@ -110,7 +110,7 @@ namespace WebSales.Infra.Repositories
 
         public async Task<IEnumerable<Sale>> GetSalesListByDateAsync(DateTime date)
         {
-            string query = "SELECT * FROM Sales WHERE Sales.CreatedAt LIKE @Date GROUP BY SaleNumber";
+            string query = "SELECT * FROM Sales WHERE Sales.SaleCancelled=0 AND Sales.CreatedAt LIKE @Date GROUP BY SaleNumber";
 
             using SqlConnection connection = new(ConnectionString);
             using SqlCommand command = new(query, connection);
@@ -144,27 +144,28 @@ namespace WebSales.Infra.Repositories
             return salesList;
         }
 
-        public async Task<IEnumerable<Sale>> GetSalesBySaleNumberAsync(string saleNumber)
+        public async Task<Sale> GetSaleBySaleNumberAsync(string saleNumber)
         {
-            string query = "SELECT * FROM Sales WHERE Sales.SaleNumber LIKE @SaleNumber";
+            string query = "SELECT Sales.Id, Sales.SaleNumber, Sales.ProductPriceAtMoment, Sales.ProductQuantity,  Sales.Total,  Sales.SaleCancelled,  Sales.CustomerId, Sales.ProductId, Sales.CreatedAt, Sales.ModifiedAt FROM Sales WHERE Sales.SaleNumber = @SaleNumber";
 
             using SqlConnection connection = new(ConnectionString);
             using SqlCommand command = new(query, connection);
 
-            command.Parameters.AddWithValue("@SaleNumber", "%" + saleNumber + "%");
+            command.Parameters.AddWithValue("@SaleNumber", saleNumber);
 
-            List<Sale> salesList = new();
+
+            Sale sale = null;
 
             try
             {
                 await OpenConnection(connection);
-                SqlDataReader reader = await command.ExecuteReaderAsync(CommandBehavior.CloseConnection);
+                using SqlDataReader reader = await command.ExecuteReaderAsync(CommandBehavior.CloseConnection);
 
                 if (reader.HasRows)
                 {
-                    while (await reader.ReadAsync())
+                    if (await reader.ReadAsync())
                     {
-                        salesList.Add(ConvertToEntity(reader));
+                        sale = ConvertToEntity(reader);
                     }
                 }
             }
@@ -177,7 +178,7 @@ namespace WebSales.Infra.Repositories
                 await CheckAndCloseConnection(connection);
             }
 
-            return salesList;
+            return sale;
         }
 
         public async Task RemoveAsync(int id)
@@ -209,7 +210,7 @@ namespace WebSales.Infra.Repositories
 
 
             string query = "UPDATE Sales SET Sales.SaleCancelled=@SaleCancelled, Sales.ModifiedAt=@ModifiedAt WHERE Sales.SaleNumber=@SaleNumber";
-            
+
             using SqlConnection connection = new(ConnectionString);
             using SqlCommand command = new(query, connection);
 
@@ -246,6 +247,50 @@ namespace WebSales.Infra.Repositories
                 (DateTime)reader["CreatedAt"],
                 DBNull.Value.Equals(reader["ModifiedAt"]) ? null : (DateTime)reader["ModifiedAt"]
             );
+        }
+
+        public async Task CancelSaleBySaleNumberAsync(string saleNumber)
+        {
+            string query = "UPDATE Sales SET Sales.SaleCancelled=1, Sales.ModifiedAt=GETDATE() WHERE Sales.SaleNumber=@SaleNumber";
+            using SqlConnection connection = new(ConnectionString);
+            using SqlCommand command = new(query, connection);
+            command.Parameters.AddWithValue("@SaleNumber", saleNumber);
+
+            try
+            {
+                await OpenConnection(connection);
+                using SqlDataReader reader = await command.ExecuteReaderAsync(CommandBehavior.CloseConnection);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                await CheckAndCloseConnection(connection);
+            }
+        }
+
+        public async Task RevertCancelledSaleBySaleNumberAsync(string saleNumber)
+        {
+            string query = "UPDATE Sales SET Sales.SaleCancelled=0, Sales.ModifiedAt=GETDATE() WHERE Sales.SaleNumber=@SaleNumber";
+            using SqlConnection connection = new(ConnectionString);
+            using SqlCommand command = new(query, connection);
+            command.Parameters.AddWithValue("@SaleNumber", saleNumber);
+
+            try
+            {
+                await OpenConnection(connection);
+                using SqlDataReader reader = await command.ExecuteReaderAsync(CommandBehavior.CloseConnection);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                await CheckAndCloseConnection(connection);
+            }
         }
     }
 }

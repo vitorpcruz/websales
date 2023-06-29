@@ -13,5 +13,6 @@ namespace WebSales.Services.Interfaces
         Task DeleteProductAsync(int id);
         Task<IEnumerable<ProductDTO>> ProductsPurchasedByCustomerAsync(int id);
         Task ChangeStockValuesAsync(int id, int quantity);
+        Task DeleteSaleAsync(int id);
     }
 }

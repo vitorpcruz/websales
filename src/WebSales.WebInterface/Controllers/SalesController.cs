@@ -1,7 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Runtime.InteropServices;
-using WebSales.Domain.ValueObjects;
 using WebSales.Services.DTOs;
 using WebSales.Services.Interfaces;
 
@@ -38,29 +35,19 @@ namespace WebSales.WebInterface.Controllers
             return View(sales);
         }
 
-        public ActionResult Details(int id)
+        public async Task<IActionResult> RegisterSale(string? saleNumber)
         {
-            return View();
-        }
+            SaleDTO? sale = null;
+            if (saleNumber != null)
+                sale = await _saleService.GetSaleBySaleNumber(saleNumber);
 
-        public async Task<ActionResult> RegisterSale()
-        {
-            //SaleDTO sale = await GetSaleCustomerProductsAndViewBags();
             await GetSaleCustomerProductsAndViewBags();
-            var sale = new SaleDTO();
             return View(sale);
-        }
-
-        private async Task GetSaleCustomerProductsAndViewBags()
-        {
-            var saleCustomersProducts = await _valueObjectsService.GetCustomersAndProductsForSale();
-            ViewBag.CustomersDTO = saleCustomersProducts.CustomersForSaleDTO;
-            ViewBag.ProductsDTO = saleCustomersProducts.ProductsForSaleDTO;
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> RegisterSale(SaleDTO saleDto)
+        public async Task<ActionResult> RegisterSale(SaleDTO? saleDto)
         {
             var product = await _productService.FindProductByIdAsync(saleDto.ProductId.Value);
 
@@ -77,52 +64,48 @@ namespace WebSales.WebInterface.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Details(string? saleNumber)
         {
-            return View();
+            var sale = await _saleService.GetSaleBySaleNumber(saleNumber);
+            if (saleNumber == null) return RedirectToAction(nameof(Index));
+            return View(sale);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> Edit(int id)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            await GetSaleCustomerProductsAndViewBags();
+            return RedirectToAction(nameof(RegisterSale));
         }
 
-        // GET: SalesController/Delete/5
-        public ActionResult Delete(int id)
+        private async Task GetSaleCustomerProductsAndViewBags()
         {
-            return View();
+            var saleCustomersProducts = await _valueObjectsService.GetCustomersAndProductsForSale();
+            ViewBag.CustomersDTO = saleCustomersProducts.CustomersForSaleDTO;
+            ViewBag.ProductsDTO = saleCustomersProducts.ProductsForSaleDTO;
         }
 
-        // POST: SalesController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-
-
+        [HttpGet]
         public async Task<decimal> GetTodayProfit()
         {
             return await _saleService.GetTodayProfitAsync();
         }
 
+        [HttpPost]
+        public async Task CancelSaleBySaleNumber(string? q)
+        {
+            await _saleService.CancelSaleBySaleNumberAsync(q);
+        }
+
+        [HttpPost]
+        public async Task RevertCancelledSaleBySaleNumber(string? q)
+        {
+            await _saleService.RevertCancelledSaleBySaleNumberAsync(q);
+        }
+
+        [HttpDelete]
+        public async Task DeleteSale(int? id)
+        {
+            await _saleService.DeleteSaleAsync(id.Value);
+        }
     }
 }

@@ -4,8 +4,6 @@ using WebSales.Domain.ValueObjects;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using WebSales.Infra.Interfaces;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace WebSales.Infra.Repositories
 {
@@ -222,6 +220,7 @@ namespace WebSales.Infra.Repositories
            decimal? tempTotal = DBNull.Value.Equals(reader["Total"]) ? null : (decimal)reader["Total"];
            string? tempProductName = DBNull.Value.Equals(reader["ProductName"]) ? null : (string)reader["ProductName"];
            string? tempCustomerFullName = DBNull.Value.Equals(reader["CustomerFullName"]) ? null : (string)reader["CustomerFullName"];
+           bool? tempSaleCancelled = DBNull.Value.Equals(reader["SaleCancelled"]) ? null : (bool)reader["SaleCancelled"];
 
             return new SaleComplete(
                 tempSaleNumber,
@@ -229,7 +228,8 @@ namespace WebSales.Infra.Repositories
                 tempProductQuantity,
                 tempTotal,
                 tempProductName,
-                tempCustomerFullName
+                tempCustomerFullName,
+                tempSaleCancelled
             );
         }
     }

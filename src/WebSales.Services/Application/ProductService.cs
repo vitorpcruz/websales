@@ -62,5 +62,10 @@ namespace WebSales.Services.Application
             await _productRepository.UpdateAsync(product);
 
         }
+
+        public async Task DeleteSaleAsync(int id)
+        {
+            await _productRepository.RemoveAsync(id);
+        }
     }
 }
