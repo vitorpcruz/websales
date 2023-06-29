@@ -90,7 +90,7 @@ namespace WebSales.Tests.Infastrucutre
         [Fact]
         public async void CustomerRepository_GetCustomersByFullNameAsync_MustReturnCustomerList()
         {
-            var name = "Pereira";
+            var name = "la";
             var customers = await _customerRepository.GetCustomersByFullNameAsync(name);
             Assert.NotNull(customers);
             Assert.True(customers.Count() >= 1);

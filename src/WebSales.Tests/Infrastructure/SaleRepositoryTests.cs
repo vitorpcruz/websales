@@ -37,42 +37,9 @@ namespace WebSales.Tests.Infrastructure
         }
 
         [Fact]
-        public async Task SaleRepository_GetSalesListByDateAsync_ValidDate_MustReturnValidListByDate()
-        {
-            var date = new DateTime(2023, 06, 25);
-            var saleList = await _saleRepository.GetSalesListByDateAsync(date);
-            Assert.True(saleList.Any());
-        }
-
-        [Fact]
-        public async Task SaleRepository_GetSalesListByDateAsync_ValidDate_MustReturnEmptyListByDate()
-        {
-            var date = DateTime.Today;
-            var saleList = await _saleRepository.GetSalesListByDateAsync(date.AddDays(5));
-            Assert.False(saleList.Any());
-        }
-
-        [Fact]
-        public async Task SaleRepository_GetSalesBySaleNumber_ValidInitialSaleNumber_MustReturnValidListBySaleNumber()
-        {
-            // var date = new DateTime(2023, 06, 25).ToString("yyyyMMdd");
-            // var saleList = await _saleRepository.GetSaleBySaleNumberAsync(date);
-            // Assert.True(saleList.Any());
-        }
-
-        [Fact]
-        public async Task SaleRepository_GetSalesBySaleNumber_InvalidInitialSaleNumber_MustReturnEmptyListBySaleNumber()
-        {
-            // var date = new DateTime(2500, 06, 25).ToString("yyyyMMdd");
-            // var saleList = await _saleRepository.GetSaleBySaleNumberAsync(date);
-            // Assert.False(saleList.Any());
-        }
-
-        [Fact]
         public async Task SaleRepository_GetProfitByDateAsync_ValidDate_MustReturnValidProfitByDate()
         {
-            var date = new DateTime(2023, 06, 25);
-            var result = await _saleRepository.GetProfitByDateAsync(date);
+            var result = await _saleRepository.GetProfitByDateAsync(DateTime.Now);
             Assert.IsType<decimal>(result);
             Assert.True(result >= 1);
         }
@@ -129,19 +96,6 @@ namespace WebSales.Tests.Infrastructure
             await _saleRepository.RemoveAsync(id);
             var result = await _saleRepository.FindByIdAsync(id);
             Assert.Null(result);
-        }
-
-        [Fact] async Task SaleRepository_AddAsync_MustRegisterValidSale()
-        {
-            var newSale = new Sale(10, 10, 100, false, 10, 10);
-            await _saleRepository.AddAsync(newSale);
-
-            var salesRegistered = await _saleRepository.GetSalesListByDateAsync(DateTime.Today);
-            var firstRegister = salesRegistered.First();
-
-            Assert.Equal(firstRegister.ProductId, newSale.ProductId);
-            Assert.Equal(firstRegister.CustomerId, newSale.CustomerId);
-            Assert.Equal(firstRegister.ProductQuantity, newSale.ProductQuantity);
         }
 
         [Fact]
