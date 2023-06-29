@@ -12,11 +12,11 @@
         <form asp-action="RegisterSale">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label class="control-label">teste</label>
+                <label class="control-label">Customer List</label>
                 @Html.DropDownList("CustomersDTO", new SelectList(ViewBag.CustomersDTO, "Id", "FullName"), new{ @class="form-control", @onchange="changeCustomerId(this)" })
             </div>
             <div class="form-group">
-                <label asp-for="ProductId" class="control-label">Product ID</label>
+                <label asp-for="ProductId" class="control-label">Product List</label>
                 @Html.DropDownList("ProductsDTO", new SelectList(ViewBag.ProductsDTO, "Id", "Name"), new{ @class="form-control", @onchange="changeProductsId(this)" })
             </div>
             <div class="form-group">
@@ -46,11 +46,11 @@
 
             <br />
             <div class="form-group">
-                <button id="calculate" onclick="calculateTotal()" class="btn btn-success">Calculate</button>
-
-                <input type="submit" value="RegisterSale" class="btn btn-primary" />
-                <a asp-action="Index">Back to List</a>
-
+                <a onclick="calculateTotal()" class="btn btn-success">
+                    <i class="fa fa-refresh" aria-hidden="true"></i>
+                </a>
+                <input type="submit" value="RegisterSale" class="btn btn-success" />
+                <a asp-action="Index" class="btn btn-primary">Back to List</a>
             </div>
         </form>
     </div>

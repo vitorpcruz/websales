@@ -71,16 +71,15 @@ namespace WebSales.WebInterface.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(CustomerDTO customerDto)
         {
-            var customerId = await _customerService.GetCustomerIdByDocument(customerDto.Document);
-
-            if (customerDto.Id != customerId && customerId != 0)
+            var oldCustomer = await _customerService.FindCustomerByIdAsync(customerDto.Id.Value);
+            if (customerDto.Id != oldCustomer.Id && oldCustomer.Id != 0)
             {
                 ModelState.AddModelError("Document", "This document already exists");
                 return View(customerDto);
             }
-            
 
-            if (!ModelState.IsValid) return View(customerDto);
+
+            customerDto.IsLegalPerson = oldCustomer.IsLegalPerson;
             await _customerService.UpdateCustomerAsync(customerDto);
             return RedirectToAction(nameof(Index));
         }

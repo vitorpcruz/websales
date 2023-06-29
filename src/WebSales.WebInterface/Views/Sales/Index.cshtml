@@ -27,13 +27,7 @@
     <thead>
         <tr>
             <th>
-                SaleNumber #
-            </th>
-            <th>
-                Prod. Price
-            </th>
-            <th>
-                Prod. Quantity
+                SaleNumber
             </th>
             <th>
                 Total
@@ -57,12 +51,6 @@
                 @Html.DisplayFor(modelItem => item.SaleNumber)
             </td>
             <td>
-                R$ @Html.DisplayFor(modelItem => item.ProductPriceAtMoment)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductQuantity)
-            </td>
-            <td>
                 R$ @Html.DisplayFor(modelItem => item.Total)
             </td>
             <td>
@@ -78,7 +66,7 @@
                 <a href="@Url.Action("RegisterSale", "Sales", new { saleNumber = item.SaleNumber.ToString()})" class="btn btn-success">
                     Edit
                 </a>
-                    <a class="btn btn-warning" href="@Url.Action("Details", "Sales", new { saleNumber = item.SaleNumber.ToString()})">
+                    <a class="btn btn-primary" href="@Url.Action("Details", "Sales", new { saleNumber = item.SaleNumber.ToString()})">
                     Details
                 </a>
             </td>
